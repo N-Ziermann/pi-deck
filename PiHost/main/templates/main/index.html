@@ -9,7 +9,7 @@
 <body>
 
 	<div class="container">
-		<---! Display the 12 buttons and their images from the db: --->
+		<!--- Display the 12 buttons and their images from the db: --->
 		<div class="row" style="min-height:250px;">
 
 			{% for b in buttons %}
@@ -33,7 +33,7 @@
 		</div>
 		<br>
 
-		<---! Used to communicate with django: --->
+		<!--- Used to communicate with django: ---->
 		<form method="post">
 			{% csrf_token %}
 			<input name="cmdText" type="text" placeholder="Command">
