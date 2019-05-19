@@ -1,0 +1,44 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html>
+<head>
+	<title>Config</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+</head>
+<body>
+	<div class="container">
+		<div class="row" style="min-height:250px;">
+			{% for b in buttons %}
+			<div class="col-lg-2 col-md-4 col-sm-6 col-xs-6 bg-secondary" style="border: solid; border-color: black; border-width: 5px; margin-bottom: 15px;">
+				<img src="media/{{b.img}}" class="img-fluid rounded" alt="">
+			</div>
+			{% endfor %}
+		</div>
+
+
+		<div class="row">
+			<div class="col-lg-6">
+				<button type="button" class="btn btn-primary">Type:</button>
+				<button type="button" class="btn btn-primary">Press:</button>
+				<button type="button" class="btn btn-primary">Open in web:</button>
+				<button type="button" class="btn btn-primary">Open file/programm:</button>
+			</div>
+		</div>
+		<br>
+		<div class="row">
+			<div class="input-group mb-3">
+
+			  <div class="input-group-prepend">
+			    <span class="input-group-text" id="basic-addon3">Please Select a Command</span>
+			  </div>
+
+			  <input type="text" class="form-control" id="basic-url" aria-describedby="basic-addon3" placeholder="Please Select a Command">
+			</div>
+		</div>
+		<div class="row">
+			<button type="button" class="btn btn-primary">Save Button</button>
+		</div>
+	</div>
+</body>
+</html>
