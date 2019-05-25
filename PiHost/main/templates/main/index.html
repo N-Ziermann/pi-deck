@@ -34,11 +34,12 @@
 		<br>
 
 		<!--- Used to communicate with django: ---->
-		<form method="post">
+		<form method="post" enctype="multipart/form-data">
 			{% csrf_token %}
 			<input name="cmdText" type="text" placeholder="Command">
 			<input name="cmd" type="hidden" id="cmdInput">
 			<input name="buttonID" type="hidden" id="buttonInput">
+			<input type="file" name="img">
 			<button type="submit" onclick="submit" class="btn btn-primary">Save Button</button>
 		</form>
 
