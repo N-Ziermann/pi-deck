@@ -10,11 +10,11 @@
 
 	<div class="container">
 		<!--- Display the 12 buttons and their images from the db: --->
-		<div class="row" style="min-height:250px;">
+		<div class="row">
 
 			{% for b in buttons %}
 
-			<div onclick="GuiButton({{b.id}})" class="col-lg-2 col-md-4 col-sm-6 col-xs-6 bg-secondary" style="border: solid; border-color: black; border-width: 5px; margin-bottom: 15px;">
+			<div onclick="GuiButton({{b.id}})" class="col-lg-3 col-md-4 col-sm-6 col-xs-6 bg-secondary" style="min-height:250px;border: solid; border-color: black; border-width: 5px; margin-bottom: 15px;">
 				<img src="media/{{b.img}}" alt="" class="img-fluid rounded">
 			</div>
 
@@ -47,7 +47,7 @@
 
 	<script type="text/javascript">
 
-		var allGuiButtons = document.getElementsByClassName("col-lg-2 col-md-4 col-sm-6 col-xs-6 bg-secondary");
+		var allGuiButtons = document.getElementsByClassName("col-lg-3 col-md-4 col-sm-6 col-xs-6 bg-secondary");
 
 		// put chosen Button into form:
 		function GuiButton(index){
