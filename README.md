@@ -1,5 +1,5 @@
 # pi-deck
-**Version 0.0.1**
+**Version 0.0.2**
 
 ## Installation
 
@@ -54,26 +54,13 @@ Commands to install:
 
   The numbers you need to replace the X's with are also visible on the top right of the GUI
 
-  The login details are as follows:
+- To now customize one of the buttons do this:
 
-  - Username: admin
-  - Password: macro
-
-- Now you should be able to click on a button and change it 
-
-  (uploading an image or changing its command.)
-
-  For now there are 4 commands you can use:
-
-  `web url` (opens a website)
-
-  `type text` (writes a specific text)
-
-  `press key/s` (presses a certain key or key-combination like control + s)
-
-  `open file/program` (opens a file or program)
-
-- When you're done just press the button with the green arrow on your Host (raspberry) and your new config should now be active.
+  1. Select the button you want to change by clicking on it.
+2. Click on one of the 4 blue command buttons *(Type, Press, Open in web, Open File)*
+  3. Type the command you want to execute into the input field. (For example: **"www.google.com")*
+4. (Optional) Use the *"choose file"* button to upload an image to the button.
+  5. Press the *"Save Button"* Button to save your changes.
 
 
 
