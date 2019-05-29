@@ -155,6 +155,8 @@ class Window(QWidget):
         for i in range(len(imgs)):
             if imgs[i] != "":
                 self.buttons[i].setIcon(QIcon(imgDir + imgs[i]))
+            else:
+                self.buttons[i].setIcon(QIcon())
 
 
 if __name__ == "__main__":
