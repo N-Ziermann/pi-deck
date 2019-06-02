@@ -1,5 +1,5 @@
 # pi-deck
-**Version 0.0.2**
+**Version 0.1.0**
 
 ## Installation
 
@@ -52,7 +52,7 @@ Commands to install:
 
   `192.168.XXX.XXX:8000`
 
-  The numbers you need to replace the X's with are also visible on the top right of the GUI
+  The numbers you need to replace the X's with is the same you put into the command window before
 
 - To now customize one of the buttons do this:
 
