@@ -12,7 +12,7 @@ class Window(QWidget):
         super(Window, self).__init__()
         self.images = []
         self.initUI()
-        
+
 
     def initUI(self):
         screen = app.primaryScreen()
@@ -48,14 +48,6 @@ class Window(QWidget):
         self.downloadButton.move(self.menuHeight, 0)
         self.downloadButton.setIconSize(QSize(self.menuHeight, self.menuHeight))
 
-        #draw IP-Label
-        ipLabel = QLabel(self)
-        ipLabel.setText("IP-Address: " + myIp)
-        ipLabel.resize(sWidth/3, self.menuHeight)
-        ipLabel.move(2 * self.menuHeight + sWidth/25, 0)
-        ipFont = QFont("Times", 20, QFont.Bold) 
-        ipLabel.setFont(ipFont)
-
         # tell each button what to do
         self.buttons[0].clicked.connect(self.onB0)
         self.buttons[1].clicked.connect(self.onB1)
@@ -73,9 +65,9 @@ class Window(QWidget):
         self.downloadButton.clicked.connect(self.download)
 
         # prepare buttons for displaying images
-        for i in range(0, 12):  
+        for i in range(0, 12):
             self.buttons[i].setIconSize(QSize(self.buttonWidth - 20, self.buttonHeight - 20))# -20 prevents overlaps with button
-        
+
         # set button icons
         self.download()
         self.killSwitch.setIcon(QIcon("./baseImgs/Off.png"))
@@ -166,7 +158,7 @@ if __name__ == "__main__":
     commands = [""] * 12
     imgs = [""] * 12
 
-    # Connect to googles DNS to get my IP(one can assume it won't change for now) 
+    # Connect to googles DNS to get my IP(one can assume it won't change for now)
     s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
     s.connect(("8.8.8.8", 80))
     myIp = s.getsockname()[0]
