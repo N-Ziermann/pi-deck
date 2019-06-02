@@ -20,9 +20,15 @@
 
 Commands to install:
 
+> pip install django
+>
 > pip install PyQt5
 >
-> pip install django
+> 
+>
+> (if the above didn't work):
+>
+> sudo apt-get install qt5-default pyqt5-dev pyqt5-dev-tools
 
 ##### Client (raspberry):
 
