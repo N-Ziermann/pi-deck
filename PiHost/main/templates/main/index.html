@@ -48,6 +48,7 @@
 	<script type="text/javascript">
 
 		var allGuiButtons = document.getElementsByClassName("col-lg-3 col-md-4 col-sm-6 col-xs-6 bg-secondary");
+		var placeholderObj = document.getElementsByName("cmdText")[0];
 
 		// put chosen Button into form:
 		function GuiButton(index){
@@ -65,7 +66,21 @@
 
 		// put chosen command into form:
 		function cmdButton(cmd){
-			document.getElementById("cmdInput").value = cmd
+			document.getElementById("cmdInput").value = cmd;
+			switch (cmd) {
+				case "type":
+					placeholderObj.placeholder = "This is an example";
+					break;
+				case "press":
+					placeholderObj.placeholder = "shift+s";
+					break;
+				case "web":
+					placeholderObj.placeholder = "www.google.com";
+					break;
+				case "open":
+					placeholderObj.placeholder = "/path/to/file";
+					break;
+			}
 		}
 
 	</script>

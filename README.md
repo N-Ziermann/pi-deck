@@ -1,5 +1,5 @@
 # pi-deck
-**Version 0.1.0**
+**Version 0.1.1**
 
 ## Installation
 
@@ -64,7 +64,7 @@ Commands to install:
 
   1. Select the button you want to change by clicking on it.
 2. Click on one of the 4 blue command buttons *(Type, Press, Open in web, Open File)*
-  3. Type the command you want to execute into the input field. (For example: **"www.google.com")*
+  3. Type the command you want to execute into the input field. (For example: *"www.google.com")*
 4. (Optional) Use the *"choose file"* button to upload an image to the button.
   5. Press the *"Save Button"* Button to save your changes.
 
