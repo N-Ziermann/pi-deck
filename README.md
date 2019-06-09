@@ -70,7 +70,7 @@ Commands to install:
 
 - To open a website in anything but Internet Explorer you need to type www in front of the url
 
-- The Off button doesn't kill the webserver. To do that you need to type:
+- (Linux only) The Off button doesn't kill the webserver. To do that you need to type:
 
    `pkill -f runserver`
 

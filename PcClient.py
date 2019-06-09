@@ -13,7 +13,7 @@ s.connect((host, port))
 data = s.recv(1024).decode() # contains data of button pressed on other device
 
 while data != "quit":
-    
+
     if re.match("^web ", data):
         content = re.sub("^web ", "", data)
         wb.open(content, new=2)
@@ -25,18 +25,18 @@ while data != "quit":
         kb.press_and_release(content)
     elif re.match("^open ", data):
         content = re.sub("^open ", "", data)
-        os.startfile(content)
+        #check if need to use windows or linux command
+        if os.name == "nt":
+            os.startfile(content)
+        else:
+            #check if trying to open file or program
+            if "/" in content:
+                os.system("xdg-open " + content)
+            else:
+                os.system(content)
 
     #wait for next instruction:
     data = s.recv(1024).decode()
 
 s.close()
 quit()
-
-    
-    
-
-
-
-    
-
