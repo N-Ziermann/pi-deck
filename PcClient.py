@@ -1,6 +1,17 @@
-import socket, os, re
+import socket, os, re, pyautogui, multiprocessing
 import webbrowser as wb
-import keyboard as kb
+
+
+def open(content): # opens a file or program
+    #check if need to use windows or linux command
+    if os.name == "nt":
+        os.startfile(content)
+    else:
+        #check if trying to open file or program
+        if "/" in content:
+            os.system("xdg-open " + content)
+        else:
+            os.system(content)
 
 
 s = socket.socket()
@@ -9,9 +20,7 @@ port = 12345
 s.connect((host, port))
 
 # do what the other device told you to do
-
 data = s.recv(1024).decode() # contains data of button pressed on other device
-
 while data != "quit":
 
     if re.match("^web ", data):
@@ -19,21 +28,19 @@ while data != "quit":
         wb.open(content, new=2)
     elif re.match("^type ", data):
         content = re.sub("^type ", "", data)
-        kb.write(content)
+        pyautogui.typewrite(content)
     elif re.match("^press ", data):
         content = re.sub("^press ", "", data)
-        kb.press_and_release(content)
+        keys = re.sub(" ", "", content).split("+")  # split content up into single keys
+        for key in keys:    # hold down all keys
+            pyautogui.keyDown(key)
+        for key in keys:    # let go of all keys
+            pyautogui.keyUp(key)
     elif re.match("^open ", data):
         content = re.sub("^open ", "", data)
-        #check if need to use windows or linux command
-        if os.name == "nt":
-            os.startfile(content)
-        else:
-            #check if trying to open file or program
-            if "/" in content:
-                os.system("xdg-open " + content)
-            else:
-                os.system(content)
+        # open new process to prevent python from waiting for program to close
+        p = multiprocessing.Process(target=open, args=(content,))
+        p.start()
 
     #wait for next instruction:
     data = s.recv(1024).decode()

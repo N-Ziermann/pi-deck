@@ -1,5 +1,5 @@
 # pi-deck
-**Version 0.1.1**
+**Version 0.2.0**
 
 ## Installation
 
@@ -27,13 +27,13 @@ Commands to install:
 ##### Client (raspberry):
 
 - webbrowser
-- keyboard
+- pyautogui
 
 Commands to install:
 
 > pip install webbrowser
 >
-> pip install keyboard
+> pip install pyautogui
 
 
 
