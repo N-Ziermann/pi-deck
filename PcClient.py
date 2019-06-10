@@ -2,16 +2,11 @@ import socket, os, re, pyautogui, multiprocessing
 import webbrowser as wb
 
 
-def open(content): # opens a file or program
-    #check if need to use windows or linux command
-    if os.name == "nt":
-        os.startfile(content)
+def linuxopen(content): # opens a file or program as seperate process
+    if "/" in content:
+        os.system("xdg-open " + content)
     else:
-        #check if trying to open file or program
-        if "/" in content:
-            os.system("xdg-open " + content)
-        else:
-            os.system(content)
+        os.system(content)
 
 
 s = socket.socket()
@@ -38,11 +33,15 @@ while data != "quit":
             pyautogui.keyUp(key)
     elif re.match("^open ", data):
         content = re.sub("^open ", "", data)
-        # open new process to prevent python from waiting for program to close
-        p = multiprocessing.Process(target=open, args=(content,))
-        p.start()
+        # check what os' cmd needs to be used
+        if os.name == "nt":
+            os.startfile(content)
+        else:
+            # start seperate process as linux's python would otherwise freeze
+            p = multiprocessing.Process(target=linuxopen, args=(content,))
+            p.start()
 
-    #wait for next instruction:
+    # wait for next instruction:
     data = s.recv(1024).decode()
 
 s.close()
