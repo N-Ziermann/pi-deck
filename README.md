@@ -66,15 +66,13 @@ Commands to install:
 
 ## Limitations/Known Issues
 
-- Typing and pressing buttons needs root permission on linux
-
 - To open a website in anything but Internet Explorer you need to type www in front of the url
 
 - (Linux only) The Off button doesn't kill the webserver. To do that you need to type:
 
    `pkill -f runserver`
 
-- If the connection between the two computers times out or one crashes you need to kill the GUI with alt+f4
+- If the connection between the two computers times out or one crashes you need to kill the GUI manually
 
   
 
