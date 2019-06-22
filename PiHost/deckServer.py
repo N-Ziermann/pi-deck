@@ -1,5 +1,5 @@
 import sqlite3 as sql
-import sys, socket
+import sys, socket, os
 from PyQt5.QtGui import QIcon, QFont
 from PyQt5.QtWidgets import QApplication, QWidget, QPushButton, QLabel
 from PyQt5.QtCore import QSize
@@ -126,6 +126,8 @@ class Window(QWidget):
         c.send(commands[11].encode())
 
     def kill(self):
+	if os.name != "nt":
+	    os.system("pkill -f runserver")
         c.send("quit".encode())
         s.close()
         quit()
