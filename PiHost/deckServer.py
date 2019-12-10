@@ -126,10 +126,10 @@ class Window(QWidget):
         c.send(commands[11].encode())
 
     def kill(self):
-	if os.name != "nt":
-	    os.system("pkill -f runserver")
         c.send("quit".encode())
         s.close()
+        if os.name != "nt":
+            os.system("pkill -f runserver")
         quit()
 
     def download(self):
