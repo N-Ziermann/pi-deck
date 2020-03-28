@@ -70,8 +70,8 @@ class Window(QWidget):
 
         # set button icons
         self.download()
-        self.killSwitch.setIcon(QIcon("./baseImgs/Off.png"))
-        self.downloadButton.setIcon(QIcon("./baseImgs/Download.png"))
+        self.killSwitch.setIcon(QIcon(file_dir + "baseImgs/Off.png"))
+        self.downloadButton.setIcon(QIcon(file_dir + "baseImgs/Download.png"))
 
         #show gui on screen
         self.showFullScreen()
@@ -134,7 +134,7 @@ class Window(QWidget):
 
     def download(self):
         #get data from db table
-        conn = sql.connect("db.sqlite3")
+        conn = sql.connect(file_dir + "db.sqlite3")
         c = conn.cursor()
         c.execute("SELECT * FROM " + appName + "_" + className)
         data = c.fetchall() #index,cmd,img
@@ -154,7 +154,8 @@ class Window(QWidget):
 
 
 if __name__ == "__main__":
-    imgDir = './main/media/'
+    file_dir = os.path.dirname(os.path.abspath(__file__)) + "/"
+    imgDir = file_dir + 'main/media/'
     appName = 'main'
     className = 'button'
     commands = [""] * 12

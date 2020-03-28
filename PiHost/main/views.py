@@ -6,6 +6,7 @@ import os
 
 # Create your views here.
 def homepage(request):
+	file_dir = os.path.dirname(os.path.abspath(__file__)) + "/"
 	if request.method == "POST":
 		# get data from webpage
 		b = request.POST["buttonID"]
@@ -25,7 +26,7 @@ def homepage(request):
 				print("*"*50)
 				print(oldImg)
 				print("*"*50)
-				os.remove("./main" + oldImg)
+				os.remove(file_dir + oldImg)
 			# override the selected buttons command
 			instance.command = cmd + " " + cmdText
 			instance.img = img
