@@ -1,6 +1,9 @@
-import socket, os, re, pyautogui, multiprocessing
+import socket, os, re, multiprocessing
 import webbrowser as wb
-
+# fix keyboard on linux
+if os.name != "nt":
+    os.system("xhost +")
+import keyboard as kb
 
 def linuxopen(content): # opens a file or program as seperate process
     if "/" in content:
@@ -15,7 +18,7 @@ port = 12345
 s.connect((host, port))
 
 # do what the other device told you to do
-data = s.recv(1024).decode() # contains data of button pressed on other device
+data = s.recv(1024).decode(encoding='UTF-8') # contains data of button pressed on other device
 while data != "quit":
 
     if re.match("^web ", data):
@@ -23,14 +26,17 @@ while data != "quit":
         wb.open(content, new=2)
     elif re.match("^type ", data):
         content = re.sub("^type ", "", data)
-        pyautogui.typewrite(content)
+        print(bytes(content,"UTF-8"))
+        content = bytes(content,"UTF-8").replace(b'\\n',b'\n').replace(b'\\t',b'\t').decode()
+        print(content)
+        kb.write(content)
     elif re.match("^press ", data):
         content = re.sub("^press ", "", data)
         keys = re.sub(" ", "", content).split("+")  # split content up into single keys
         for key in keys:    # hold down all keys
-            pyautogui.keyDown(key)
+            kb.press(key)
         for key in keys:    # let go of all keys
-            pyautogui.keyUp(key)
+            kb.release(key)
     elif re.match("^open ", data):
         content = re.sub("^open ", "", data)
         # check what os' cmd needs to be used
