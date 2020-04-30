@@ -1,5 +1,5 @@
 # pi-deck
-**Version 1.0.0**
+**Version 1.1.0**
 
 ## Installation
 
@@ -40,6 +40,8 @@ Commands to install:
 > pip install webbrowser
 >
 > pip install pyautogui
+>
+> pip install kbtype
 
 
 
@@ -72,7 +74,7 @@ Commands to install:
 
 ## Limitations/Known Issues
 
-- To open a website in anything but Internet Explorer you need to type www in front of the url
+- To open a website in anything but Internet Explorer you NEED to type http:// or https:// in front of the url
 
 - If the connection between the two computers times out or one crashes you need to kill the GUI manually
 
