@@ -1,0 +1,63 @@
+<html>
+  <head>
+    <link rel="stylesheet" href="index.css" />
+  </head>
+  <body>
+    <!-- <button onclick="onClick()">Type Hello World in 5 Seconds</button>
+    <script>
+      const electron = require("electron");
+      const { ipcRenderer } = electron;
+      function onClick() {
+        console.log(ipcRenderer, electron);
+        ipcRenderer.send("typeText", { text: "Hello World", delay: 5000 });
+      }
+    </script> -->
+    <div class="container">
+      <div class="buttonArea">
+        <div class="buttons">
+          <button type="button" name="button"></button>
+          <button type="button" name="button"></button>
+          <button type="button" name="button"></button>
+          <button type="button" name="button"></button>
+          <button type="button" name="button"></button>
+          <button type="button" name="button"></button>
+          <button type="button" name="button"></button>
+          <button type="button" name="button"></button>
+          <button type="button" name="button"></button>
+          <button type="button" name="button"></button>
+          <button type="button" name="button"></button>
+          <button type="button" name="button"></button>
+          <button type="button" name="button"></button>
+          <button type="button" name="button"></button>
+          <button type="button" name="button"></button>
+          <button type="button" name="button"></button>
+          <button type="button" name="button"></button>
+          <button type="button" name="button"></button>
+        </div>
+      </div>
+      <div class="configArea">
+        <h1>Config</h1>
+        <h3>Type of Command</h3>
+        <input type="radio" value="a" name="option" checked />
+        <label>Type Text</label><br />
+        <input type="radio" value="b" name="option" checked />
+        <label>Press Keycombination</label><br />
+        <input type="radio" value="c" name="option" />
+        <label>Program / Script</label><br />
+        <input type="radio" value="d" name="option" /> <label>Command</label
+        ><br />
+        <h3>Value:</h3>
+        <input placeholder="ctrl+alt" />
+        <input placeholder="Hello World" />
+        <input placeholder="path/to/file" />
+        <input placeholder="shell command" />
+        <h3>Icon</h3>
+        <input
+          type="file"
+          accept="image/png, image/jpeg"
+          id="iconUpload"
+        />
+      </div>
+    </div>
+  </body>
+</html>

@@ -1,0 +1,16 @@
+{
+  "name": "pi-deck",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "electron ."
+  },
+  "author": "N-Ziermann",
+  "license": "MIT",
+  "dependencies": {
+    "electron": "^16.0.6",
+    "express": "^4.17.2",
+    "node-key-sender": "^1.0.11"
+  }
+}
