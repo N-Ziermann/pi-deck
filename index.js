@@ -47,9 +47,7 @@ app.on("ready", () => {
     }
   });
 
-  expressApp.get("/", (req, res) => {
-    return res.send("Received a GET HTTP method");
-  });
+  expressApp.use(express.static("webserver"));
   expressApp.listen(expressPort);
 });
 

@@ -1,1 +1,1 @@
-jre
+- java runtime environment
