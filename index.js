@@ -36,9 +36,10 @@ app.on("ready", () => {
       contextIsolation: false,
     },
   });
-  mainWindow.loadURL(`file://${__dirname}/build/index.html`);
+  mainWindow.loadURL(`file://${__dirname}/build/index.html#electron`); // use #electron to know wether code runs through electron or webserver
   tray = new Tray(path.join(__dirname, "./react-icon.png"));
   tray.setContextMenu(contextMenu);
+  tray.setToolTip('PiDeck')
 
   mainWindow.on("close", (e) => {
     if (!appStopped) {
@@ -47,7 +48,7 @@ app.on("ready", () => {
     }
   });
 
-  expressApp.use(express.static("webserver"));
+  expressApp.use(express.static("build"));
   expressApp.listen(expressPort);
 });
 

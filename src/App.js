@@ -1,34 +1,16 @@
 import "./App.css";
-import exampleIcon from "./logo.svg"
+import {ButtonArea} from "./components/buttonArea/ButtonArea"
 
 function App() {
+  if(window.location.href.includes("#electron")){
+    console.log("Running through electron")
+  } else {
+    console.log("Not running through electron")
+  }
   return (
     <div className="app">
       <div className="container">
-        <div className="buttonArea">
-          <div className="buttons">
-            <button type="button" name="button">
-              <img src={exampleIcon} />
-            </button>
-            <button type="button" name="button"></button>
-            <button type="button" name="button"></button>
-            <button type="button" name="button"></button>
-            <button type="button" name="button"></button>
-            <button type="button" name="button"></button>
-            <button type="button" name="button"></button>
-            <button type="button" name="button"></button>
-            <button type="button" name="button"></button>
-            <button type="button" name="button"></button>
-            <button type="button" name="button"></button>
-            <button type="button" name="button"></button>
-            <button type="button" name="button"></button>
-            <button type="button" name="button"></button>
-            <button type="button" name="button"></button>
-            <button type="button" name="button"></button>
-            <button type="button" name="button"></button>
-            <button type="button" name="button"></button>
-          </div>
-        </div>
+        <ButtonArea />
         <div className="configArea">
           <h1>Config</h1>
           <h3>Type of Command</h3>
