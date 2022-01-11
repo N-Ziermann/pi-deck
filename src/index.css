@@ -1,0 +1,16 @@
+* {
+  box-sizing: border-box;
+}
+
+html, #root, body {
+  height:100%;
+}
+
+body {
+  margin: 0;
+  --color-primary: #121212;
+  --color-secondary: #181818;
+  --color-text: #e0e0e0;
+  color: var(--color-text);
+  font-family: Helvetica;
+}

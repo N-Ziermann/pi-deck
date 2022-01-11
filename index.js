@@ -36,7 +36,7 @@ app.on("ready", () => {
       contextIsolation: false,
     },
   });
-  mainWindow.loadURL(`file://${__dirname}/index.html`);
+  mainWindow.loadURL(`file://${__dirname}/build/index.html`);
   tray = new Tray(path.join(__dirname, "./react-icon.png"));
   tray.setContextMenu(contextMenu);
 

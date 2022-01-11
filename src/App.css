@@ -1,14 +1,6 @@
-* {
-  box-sizing: border-box;
-}
-
-body {
-  margin: 0;
-  --color-primary: #121212;
-  --color-secondary: #181818;
-  --color-text: #ffffff;
-  color: var(--color-text);
-  font-family: Helvetica;
+.app{
+  height:100%;
+  width:100%;
 }
 
 .container {
@@ -50,7 +42,7 @@ body {
 
 .commandInput {
   background-color: var(--color-primary);
-  color: white;
+  color: var(--color-text);;
   margin: 5px;
   border-color: var(--color-secondary);
   padding: 0.5rem;
