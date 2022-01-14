@@ -50,11 +50,55 @@ app.on("ready", () => {
 
   expressApp.use(express.static("build"));
   expressApp.get("/button/:buttonId", function (req, res) {
-    console.log("Button was pressed: " + req.params.buttonId);
+    onButtonEvent(req.params.buttonId);
     res.sendStatus(200);
   });
   expressApp.listen(expressPort);
 });
+
+const ACTIONS = [
+  { type: "text", value: "Hello World" },
+  { type: "press", value: "ctrl+a" },
+  { type: "run", value: "lutris" },
+  { type: "exec", value: "echo Hola Mundo" },
+  { type: "text", value: "Hello World" },
+  { type: "text", value: "Hello World" },
+  { type: "text", value: "Hello World" },
+  { type: "text", value: "Hello World" },
+  { type: "text", value: "Hello World" },
+  { type: "text", value: "Hello World" },
+  { type: "text", value: "Hello World" },
+  { type: "text", value: "Hello World" },
+  { type: "text", value: "Hello World" },
+  { type: "text", value: "Hello World" },
+  { type: "text", value: "Hello World" },
+  { type: "text", value: "Hello World" },
+  { type: "text", value: "Hello World" },
+  { type: "press", value: "ctrl+alt+del" },
+];
+
+const onButtonEvent = (buttonId) => {
+  const action = ACTIONS[buttonId];
+  if (!action) {
+    return;
+  }
+  switch (action.type) {
+    case "text":
+      console.log("Typing: " + action.value);
+      break;
+    case "press":
+      console.log("Pressing: " + action.value);
+      break;
+    case "run":
+      console.log("Running: " + action.value);
+      break;
+    case "exec":
+      console.log("Executing: " + action.value);
+      break;
+    default:
+      console.log("Invalid Command");
+  }
+};
 
 // ipcMain.on("typeText", (event, payload) => {
 //   setTimeout(() => {

@@ -24,6 +24,10 @@
   justify-content: center;
 }
 
+.active {
+  background-color: var(--color-ternary) !important;
+}
+
 .buttons button img {
   width: 100%;
 }
