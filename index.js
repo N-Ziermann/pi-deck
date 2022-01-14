@@ -39,7 +39,7 @@ app.on("ready", () => {
   mainWindow.loadURL(`file://${__dirname}/build/index.html#electron`); // use #electron to know wether code runs through electron or webserver
   tray = new Tray(path.join(__dirname, "./react-icon.png"));
   tray.setContextMenu(contextMenu);
-  tray.setToolTip('PiDeck')
+  tray.setToolTip("PiDeck");
 
   mainWindow.on("close", (e) => {
     if (!appStopped) {
@@ -49,6 +49,10 @@ app.on("ready", () => {
   });
 
   expressApp.use(express.static("build"));
+  expressApp.get("/button/:buttonId", function (req, res) {
+    console.log("Button was pressed: " + req.params.buttonId);
+    res.sendStatus(200);
+  });
   expressApp.listen(expressPort);
 });
 
