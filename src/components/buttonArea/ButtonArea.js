@@ -1,31 +1,16 @@
-import "./ButtonArea.css" // currently not working
-import exampleIcon from "../../logo.svg"
+import "./ButtonArea.css"; // currently not working
 
 export function ButtonArea(props) {
+  const renderButtons = () =>
+    props.icons.map((icon, index) => (
+      <button key={index} onClick={() => props.onSelect(index)}>
+        <img src={icon} />
+      </button>
+    ));
+
   return (
     <div className="buttonArea">
-      <div className="buttons">
-        <button type="button" name="button">
-          <img src={exampleIcon} />
-        </button>
-        <button type="button" name="button"></button>
-        <button type="button" name="button"></button>
-        <button type="button" name="button"></button>
-        <button type="button" name="button"></button>
-        <button type="button" name="button"></button>
-        <button type="button" name="button"></button>
-        <button type="button" name="button"></button>
-        <button type="button" name="button"></button>
-        <button type="button" name="button"></button>
-        <button type="button" name="button"></button>
-        <button type="button" name="button"></button>
-        <button type="button" name="button"></button>
-        <button type="button" name="button"></button>
-        <button type="button" name="button"></button>
-        <button type="button" name="button"></button>
-        <button type="button" name="button"></button>
-        <button type="button" name="button"></button>
-      </div>
+      <div className="buttons">{renderButtons()}</div>
     </div>
   );
 }
