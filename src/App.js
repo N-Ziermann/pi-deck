@@ -2,10 +2,14 @@ import "./App.css";
 import { ButtonArea } from "./components/buttonArea/ButtonArea";
 import { RadioButton } from "./components/radioButton/RadioButton";
 import exampleIcon from "./logo.svg";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 
 function App() {
   const [activeCommandType, setActiveCommandType] = useState(0);
+  const [command, setCommand] = useState("");
+
+  useEffect(()=>{setCommand("")}, [activeCommandType])
+
   return (
     <div className="app">
       <div className="container">
@@ -36,13 +40,8 @@ function App() {
           <div className="configArea">
             <h1>Config</h1>
             <h3>Type of Command</h3>
-            {
-              // <input type="radio" value="a" name="option" checked />
-              //<label>Type Text</label>
-            }
             <RadioButton
               label="Type Text"
-              onSelect={console.log}
               index={0}
               setActiveItem={setActiveCommandType}
               active={activeCommandType === 0}
@@ -66,22 +65,12 @@ function App() {
               setActiveItem={setActiveCommandType}
               active={activeCommandType === 3}
             />
-
-            {/*<br />
-            <input type="radio" value="b" name="option" checked />
-            <label>Press Keycombination</label>
-            <br />
-            <input type="radio" value="c" name="option" />
-            <label>Program / Script</label>
-            <br />
-            <input type="radio" value="d" name="option" />{" "}
-            <label>Command</label>*/}
             <br />
             <h3>Value</h3>
-            <input placeholder="ctrl+alt" className="commandInput" />
-            <input placeholder="Hello World" className="commandInput" />
-            <input placeholder="path/to/file" className="commandInput" />
-            <input placeholder="shell command" className="commandInput" />
+            {activeCommandType === 0 && <input placeholder="ctrl+alt" className="commandInput" onChange={(e)=>{setCommand(e.target.value)}} value={command}/>}
+            {activeCommandType === 1 && <input placeholder="Hello World" className="commandInput" onChange={(e)=>{setCommand(e.target.value)}} value={command}/>}
+            {activeCommandType === 2 && <input placeholder="path/to/file" className="commandInput" onChange={(e)=>{setCommand(e.target.value)}} value={command}/>}
+            {activeCommandType === 3 && <input placeholder="shell command" className="commandInput" onChange={(e)=>{setCommand(e.target.value)}} value={command}/>}
             <h3>Icon</h3>
             <input type="file" accept="image/png, image/jpeg" id="iconUpload" />
           </div>
