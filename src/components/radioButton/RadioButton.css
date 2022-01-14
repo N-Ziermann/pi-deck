@@ -1,17 +1,17 @@
-.radioButtonContainer{
-  display:flex;
+.radioButtonContainer {
+  display: flex;
   align-items: center;
 }
 
 .radioButton {
-  width: .75rem;
-  height: .75rem;
+  width: 0.75rem;
+  height: 0.75rem;
   background-color: white;
   border: solid white 2px;
   border-radius: 100%;
   margin: 0 1ch;
 }
 
-.checked{
+.checked {
   background-color: black;
 }

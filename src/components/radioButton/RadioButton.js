@@ -9,7 +9,7 @@ export function RadioButton(props) {
       }}
       className="radioButtonContainer"
     >
-      <div className={classNames("radioButton", {"checked": props.active})} />
+      <div className={classNames("radioButton", { checked: props.active })} />
       <label>{props.label}</label>
     </div>
   );

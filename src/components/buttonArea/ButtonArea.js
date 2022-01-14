@@ -1,4 +1,4 @@
-import "./ButtonArea.css"; // currently not working
+import "./ButtonArea.css";
 
 export function ButtonArea(props) {
   const renderButtons = () =>

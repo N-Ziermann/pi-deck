@@ -1,0 +1,17 @@
+.commandInput {
+  background-color: var(--color-primary);
+  color: var(--color-text);
+  margin: 5px;
+  border-color: var(--color-secondary);
+  padding: 0.5rem;
+}
+
+.commandInput:focus {
+  outline: none;
+  background-color: var(--color-secondary);
+}
+
+.configArea {
+  flex: 1;
+  padding: 14px;
+}

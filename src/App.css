@@ -1,6 +1,6 @@
-.app{
-  height:100%;
-  width:100%;
+.app {
+  height: 100%;
+  width: 100%;
 }
 
 .container {
@@ -8,22 +8,4 @@
   width: 100%;
   height: 100%;
   background-color: var(--color-primary);
-}
-
-.commandInput {
-  background-color: var(--color-primary);
-  color: var(--color-text);;
-  margin: 5px;
-  border-color: var(--color-secondary);
-  padding: 0.5rem;
-}
-
-.commandInput:focus {
-  outline: none;
-  background-color: var(--color-secondary);
-}
-
-.configArea {
-  flex: 1;
-  padding: 14px;
 }
