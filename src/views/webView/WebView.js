@@ -1,4 +1,3 @@
-
 import { ButtonArea } from "../../components/buttonArea/ButtonArea";
 import "./WebView.css";
 
@@ -11,29 +10,13 @@ export function WebView() {
     }
   };
 
-  return (
-    <ButtonArea
-      onSelect={onSelect}
-      icons={[
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-        null,
-      ]}
-    />
-  );
+  const getButtonSources = () => {
+    let sources = [];
+    for (let i = 0; i < 18; i++) {
+      sources.push(`./image/${i}`);
+    }
+    return sources;
+  };
+
+  return <ButtonArea onSelect={onSelect} icons={getButtonSources()} />;
 }

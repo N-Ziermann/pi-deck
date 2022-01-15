@@ -54,9 +54,26 @@ app.on("ready", () => {
   });
 
   expressApp.use(express.static("build"));
-  expressApp.get("/button/:buttonId", function (req, res) {
+  expressApp.get("/button/:buttonId", (req, res) => {
     onButtonEvent(req.params.buttonId);
     res.sendStatus(200);
+  });
+
+  expressApp.get("/image/:imageId", (req, res) => {
+    db.all(
+      "SELECT image FROM buttons WHERE id = ?;",
+      [req.params.imageId],
+      (err, rows) => {
+        console.log(err);
+        if (rows.length === 0) {
+          res.sendStatus(204);
+        } else {
+          const buffer = rows[0].image;
+          res.contentType("image/png");
+          res.send(buffer);
+        }
+      }
+    );
   });
   expressApp.listen(expressPort);
 });
@@ -93,7 +110,7 @@ const onButtonEvent = (buttonId) => {
       if (err || rows.length === 0) {
         return;
       }
-      const action = rows[0]
+      const action = rows[0];
 
       switch (action.commandType) {
         case "text":
@@ -116,23 +133,21 @@ const onButtonEvent = (buttonId) => {
 };
 
 ipcMain.on("button:update", (event, payload) => {
-  if (!event.activeIndex) {
+  if (event.activeIndex === null) {
     return;
   }
-
-  let iconBlob;
+  let iconBuffer;
   if (payload.iconPath) {
-    const buffer = fs.readFileSync(payload.iconPath);
-    iconBlob = new Blob([buffer]);
+    iconBuffer = fs.readFileSync(payload.iconPath);
   }
-
+  console.log(25);
   db.run(
     `REPLACE INTO buttons (id, commandType, command, image) VALUES(?,?,?,?)`,
     [
       payload.activeIndex,
       payload.activeCommandType,
       payload.command,
-      iconBlob || null,
+      iconBuffer || null,
     ],
     (e) => console.log(e)
   );

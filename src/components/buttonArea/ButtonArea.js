@@ -9,7 +9,7 @@ export function ButtonArea(props) {
         onClick={() => props.onSelect(index)}
         className={classNames({ "active": props.activeIndex === index })}
       >
-        <img src={icon} />
+        <img src={icon} alt=""/>
       </button>
     ));
 

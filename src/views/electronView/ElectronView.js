@@ -3,7 +3,12 @@ import { RadioButton } from "../../components/radioButton/RadioButton";
 import exampleIcon from "../../logo.svg";
 import { useState, useEffect, useRef } from "react";
 import "./ElectronView.css";
-const { ipcRenderer } = window.require("electron");
+
+// NEEDS WORK!
+let ipcRenderer;
+if (window.require) {
+  ipcRenderer = window.require("electron").ipcRenderer;
+}
 
 const COMMANDS = {
   0: "text",
@@ -42,31 +47,20 @@ export function ElectronView() {
     ipcRenderer.send("button:update", values);
   };
 
+  const getButtonSources = () => {
+    let sources = [];
+    for (let i = 0; i < 18; i++) {
+      sources.push(`http://localhost:3000/image/${i}`);
+    }
+    return sources;
+  };
+
   return (
     <>
       <ButtonArea
         activeIndex={activeIndex}
         onSelect={(index) => setActiveIndex(index)}
-        icons={[
-          null,
-          exampleIcon,
-          null,
-          null,
-          exampleIcon,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          null,
-          exampleIcon,
-          exampleIcon,
-          null,
-        ]}
+        icons={getButtonSources()}
       />
 
       <div className="configArea">
