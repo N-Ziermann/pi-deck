@@ -85,48 +85,34 @@ const prepareDatabase = () => {
   );
 };
 
-const ACTIONS = [
-  { type: "text", value: "Hello World" },
-  { type: "press", value: "ctrl+a" },
-  { type: "run", value: "lutris" },
-  { type: "exec", value: "echo Hola Mundo" },
-  { type: "text", value: "Hello World" },
-  { type: "text", value: "Hello World" },
-  { type: "text", value: "Hello World" },
-  { type: "text", value: "Hello World" },
-  { type: "text", value: "Hello World" },
-  { type: "text", value: "Hello World" },
-  { type: "text", value: "Hello World" },
-  { type: "text", value: "Hello World" },
-  { type: "text", value: "Hello World" },
-  { type: "text", value: "Hello World" },
-  { type: "text", value: "Hello World" },
-  { type: "text", value: "Hello World" },
-  { type: "text", value: "Hello World" },
-  { type: "press", value: "ctrl+alt+del" },
-];
-
 const onButtonEvent = (buttonId) => {
-  const action = ACTIONS[buttonId];
-  if (!action) {
-    return;
-  }
-  switch (action.type) {
-    case "text":
-      console.log("Typing: " + action.value);
-      break;
-    case "press":
-      console.log("Pressing: " + action.value);
-      break;
-    case "run":
-      console.log("Running: " + action.value);
-      break;
-    case "exec":
-      console.log("Executing: " + action.value);
-      break;
-    default:
-      console.log("Invalid or no command given");
-  }
+  db.all(
+    "SELECT commandType, command FROM buttons WHERE id = ?;",
+    [buttonId],
+    (err, rows) => {
+      if (err || rows.length === 0) {
+        return;
+      }
+      const action = rows[0]
+
+      switch (action.commandType) {
+        case "text":
+          console.log("Typing: " + action.command);
+          break;
+        case "press":
+          console.log("Pressing: " + action.command);
+          break;
+        case "run":
+          console.log("Running: " + action.command);
+          break;
+        case "exec":
+          console.log("Executing: " + action.command);
+          break;
+        default:
+          console.log("Invalid or no command given");
+      }
+    }
+  );
 };
 
 ipcMain.on("button:update", (event, payload) => {
