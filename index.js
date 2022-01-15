@@ -2,6 +2,8 @@ const ks = require("node-key-sender");
 const { app, BrowserWindow, ipcMain, Tray, Menu } = require("electron");
 const path = require("path");
 const express = require("express");
+var sqlite3 = require("sqlite3").verbose();
+var db = new sqlite3.Database("mydb.db");
 
 let expressApp = express();
 let expressPort = 3000;
@@ -29,6 +31,7 @@ const contextMenu = Menu.buildFromTemplate([
 ]);
 
 app.on("ready", () => {
+  prepareDatabase();
   mainWindow = new BrowserWindow({
     show: false,
     webPreferences: {
@@ -55,6 +58,30 @@ app.on("ready", () => {
   });
   expressApp.listen(expressPort);
 });
+
+const prepareDatabase = () => {
+  db.run(
+    `CREATE TABLE IF NOT EXISTS buttons (
+      id INTEGER NOT NULL,
+      commandType TEXT,
+      command TEXT,
+      image BLOB,
+      PRIMARY KEY (id)
+    );`,
+    [],
+    (error) => {
+      if (!error) {
+        for (let i = 0; i < 18; i++) {
+          db.all("SELECT id FROM buttons WHERE id = ?", [i], (err, rows) => {
+            if (rows.length === 0) {
+              db.run("INSERT INTO buttons (id) VALUES(?)", [i]);
+            }
+          });
+        }
+      }
+    }
+  );
+};
 
 const ACTIONS = [
   { type: "text", value: "Hello World" },
@@ -96,18 +123,15 @@ const onButtonEvent = (buttonId) => {
       console.log("Executing: " + action.value);
       break;
     default:
-      console.log("Invalid Command");
+      console.log("Invalid or no command given");
   }
 };
 
 ipcMain.on("button:update", (event, payload) => {
-  // setTimeout(() => {
-    // ks.sendText(payload.text);
-    console.log(
-      payload.activeIndex,
-      payload.activeCommandType,
-      payload.command,
-      payload.iconPath
-    );
-  // }, payload.delay);
+  console.log(
+    payload.activeIndex,
+    payload.activeCommandType,
+    payload.command,
+    payload.iconPath
+  );
 });

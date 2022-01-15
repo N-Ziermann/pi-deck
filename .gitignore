@@ -85,6 +85,9 @@ typings/
 # DynamoDB Local files
 .dynamodb/
 
+# Sqlite3 Files
+mydb.db
+
 # Webpack
 .webpack/
 
