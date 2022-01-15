@@ -100,8 +100,14 @@ const onButtonEvent = (buttonId) => {
   }
 };
 
-// ipcMain.on("typeText", (event, payload) => {
-//   setTimeout(() => {
-//     ks.sendText(payload.text);
-//   }, payload.delay);
-// });
+ipcMain.on("button:update", (event, payload) => {
+  // setTimeout(() => {
+    // ks.sendText(payload.text);
+    console.log(
+      payload.activeIndex,
+      payload.activeCommandType,
+      payload.command,
+      payload.iconPath
+    );
+  // }, payload.delay);
+});

@@ -1,17 +1,39 @@
 import { ButtonArea } from "../../components/buttonArea/ButtonArea";
 import { RadioButton } from "../../components/radioButton/RadioButton";
 import exampleIcon from "../../logo.svg";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import "./ElectronView.css";
+const { ipcRenderer } = window.require("electron");
 
 export function ElectronView() {
+  const [activeIndex, setActiveIndex] = useState(0);
   const [activeCommandType, setActiveCommandType] = useState(0);
   const [command, setCommand] = useState("");
-  const [activeIndex, setActiveIndex] = useState(null);
+  const fileInputRef = useRef();
 
   useEffect(() => {
     setCommand("");
   }, [activeCommandType]);
+
+  useEffect(() => {
+    setActiveCommandType(0);
+    setCommand("");
+    if (fileInputRef.current) {
+      fileInputRef.current.value = null;
+    }
+  }, [activeIndex]);
+
+  const applyChanges = () => {
+    const values = {
+      activeIndex,
+      activeCommandType,
+      command: command !== "" ? command : null,
+      iconPath: fileInputRef?.current?.files?.[0]
+        ? fileInputRef.current.files[0].path
+        : null,
+    };
+    ipcRenderer.send("button:update", values);
+  };
 
   return (
     <>
@@ -74,7 +96,7 @@ export function ElectronView() {
             <h3>Value</h3>
             {activeCommandType === 0 && (
               <input
-                placeholder="ctrl+alt"
+                placeholder="Hello World"
                 className="commandInput"
                 onChange={(e) => {
                   setCommand(e.target.value);
@@ -84,7 +106,7 @@ export function ElectronView() {
             )}
             {activeCommandType === 1 && (
               <input
-                placeholder="Hello World"
+                placeholder="ctrl+alt"
                 className="commandInput"
                 onChange={(e) => {
                   setCommand(e.target.value);
@@ -113,11 +135,16 @@ export function ElectronView() {
               />
             )}
             <h3>Icon</h3>
-            <input type="file" accept="image/png, image/jpeg" id="iconUpload" />
+            <input
+              type="file"
+              accept="image/png, image/jpeg"
+              id="iconUpload"
+              ref={fileInputRef}
+            />
             <br />
             <br />
             <br />
-            <button>Apply</button>
+            <button onClick={() => applyChanges()}>Apply</button>
           </>
         )}
       </div>
