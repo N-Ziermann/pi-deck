@@ -5,6 +5,13 @@ import { useState, useEffect, useRef } from "react";
 import "./ElectronView.css";
 const { ipcRenderer } = window.require("electron");
 
+const COMMANDS = {
+  0: "text",
+  1: "press",
+  2: "run",
+  3: "exec",
+};
+
 export function ElectronView() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [activeCommandType, setActiveCommandType] = useState(0);
@@ -26,7 +33,7 @@ export function ElectronView() {
   const applyChanges = () => {
     const values = {
       activeIndex,
-      activeCommandType,
+      activeCommandType: COMMANDS[activeCommandType],
       command: command !== "" ? command : null,
       iconPath: fileInputRef?.current?.files?.[0]
         ? fileInputRef.current.files[0].path

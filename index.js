@@ -2,8 +2,10 @@ const ks = require("node-key-sender");
 const { app, BrowserWindow, ipcMain, Tray, Menu } = require("electron");
 const path = require("path");
 const express = require("express");
-var sqlite3 = require("sqlite3").verbose();
-var db = new sqlite3.Database("mydb.db");
+const sqlite3 = require("sqlite3").verbose();
+const db = new sqlite3.Database("mydb.db");
+const fs = require("fs");
+const { Blob } = require("node:buffer");
 
 let expressApp = express();
 let expressPort = 3000;
@@ -128,10 +130,24 @@ const onButtonEvent = (buttonId) => {
 };
 
 ipcMain.on("button:update", (event, payload) => {
-  console.log(
-    payload.activeIndex,
-    payload.activeCommandType,
-    payload.command,
-    payload.iconPath
+  if (!event.activeIndex) {
+    return;
+  }
+
+  let iconBlob;
+  if (payload.iconPath) {
+    const buffer = fs.readFileSync(payload.iconPath);
+    iconBlob = new Blob([buffer]);
+  }
+
+  db.run(
+    `REPLACE INTO buttons (id, commandType, command, image) VALUES(?,?,?,?)`,
+    [
+      payload.activeIndex,
+      payload.activeCommandType,
+      payload.command,
+      iconBlob || null,
+    ],
+    (e) => console.log(e)
   );
 });
