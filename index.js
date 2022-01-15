@@ -6,9 +6,13 @@ const sqlite3 = require("sqlite3").verbose();
 const db = new sqlite3.Database("mydb.db");
 const fs = require("fs");
 const { Blob } = require("node:buffer");
+const ws = require("ws");
 
 let expressApp = express();
 let expressPort = 3000;
+
+let websocketServer = new ws.Server({ noServer: true });
+let activeSocket;
 
 let mainWindow;
 let tray;
@@ -53,6 +57,10 @@ app.on("ready", () => {
     }
   });
 
+  websocketServer.on("connection", (socket) => {
+    activeSocket = socket;
+  });
+
   expressApp.use(express.static("build"));
   expressApp.get("/button/:buttonId", (req, res) => {
     onButtonEvent(req.params.buttonId);
@@ -75,7 +83,13 @@ app.on("ready", () => {
       }
     );
   });
-  expressApp.listen(expressPort);
+
+  const webServer = expressApp.listen(expressPort);
+  webServer.on("upgrade", (req, socket, head) => {
+    websocketServer.handleUpgrade(req, socket, head, (socket) => {
+      websocketServer.emit("connection", socket, req);
+    });
+  });
 });
 
 const prepareDatabase = () => {
@@ -139,8 +153,11 @@ ipcMain.on("button:update", (event, payload) => {
   let iconBuffer;
   if (payload.iconPath) {
     iconBuffer = fs.readFileSync(payload.iconPath);
+    if (activeSocket) {
+      // share info that button updated over websocket and ipc
+      activeSocket.send("buttonIcons:update");
+    }
   }
-  console.log(25);
   db.run(
     `REPLACE INTO buttons (id, commandType, command, image) VALUES(?,?,?,?)`,
     [
