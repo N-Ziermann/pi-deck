@@ -3,7 +3,7 @@ import "./WebView.css";
 import { useEffect, useState } from "react";
 
 export function WebView() {
-  const [sources, setSources] = useState([]);
+  const [imageSources, setImageSources] = useState([]);
 
   useEffect(() => {
     const socket = new WebSocket(`ws://${window.location.hostname}:3000`);
@@ -29,8 +29,8 @@ export function WebView() {
     for (let i = 0; i < 18; i++) {
       paths.push(`./image/${i}?${new Date().getTime()}`);
     }
-    setSources(paths);
+    setImageSources(paths);
   };
 
-  return <ButtonArea onSelect={onSelect} icons={sources} />;
+  return <ButtonArea onSelect={onSelect} icons={imageSources} />;
 }

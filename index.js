@@ -153,10 +153,6 @@ ipcMain.on("button:update", (event, payload) => {
   let iconBuffer;
   if (payload.iconPath) {
     iconBuffer = fs.readFileSync(payload.iconPath);
-    if (activeSocket) {
-      // share info that button updated over websocket and ipc
-      activeSocket.send("buttonIcons:update");
-    }
   }
   db.run(
     `REPLACE INTO buttons (id, commandType, command, image) VALUES(?,?,?,?)`,
@@ -166,6 +162,14 @@ ipcMain.on("button:update", (event, payload) => {
       payload.command,
       iconBuffer || null,
     ],
-    (e) => console.log(e)
+    (e) => {
+      if (payload.iconPath) {
+        // share info that button updated over websocket and ipc
+        if (activeSocket) {
+          activeSocket.send("buttonIcons:update");
+        }
+        mainWindow.webContents.send("buttonIcons:update");
+      }
+    }
   );
 });

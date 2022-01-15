@@ -22,6 +22,15 @@ export function ElectronView() {
   const [activeCommandType, setActiveCommandType] = useState(0);
   const [command, setCommand] = useState("");
   const fileInputRef = useRef();
+  const [imageSources, setImageSources] = useState([]);
+
+  useEffect(() => updateButtonSources(), []);
+
+  useEffect(() => {
+    ipcRenderer.on("buttonIcons:update", () => {
+      updateButtonSources();
+    });
+  }, []);
 
   useEffect(() => {
     setCommand("");
@@ -47,12 +56,12 @@ export function ElectronView() {
     ipcRenderer.send("button:update", values);
   };
 
-  const getButtonSources = () => {
-    let sources = [];
+  const updateButtonSources = () => {
+    let urls = [];
     for (let i = 0; i < 18; i++) {
-      sources.push(`http://localhost:3000/image/${i}`);
+      urls.push(`http://localhost:3000/image/${i}?${new Date().getTime()}`);
     }
-    return sources;
+    return setImageSources(urls);
   };
 
   return (
@@ -60,7 +69,7 @@ export function ElectronView() {
       <ButtonArea
         activeIndex={activeIndex}
         onSelect={(index) => setActiveIndex(index)}
-        icons={getButtonSources()}
+        icons={imageSources}
       />
 
       <div className="configArea">
