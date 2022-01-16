@@ -3,7 +3,7 @@ const { app, BrowserWindow, ipcMain, Tray, Menu } = require("electron");
 const path = require("path");
 const express = require("express");
 const sqlite3 = require("sqlite3").verbose();
-const db = new sqlite3.Database("mydb.db");
+const db = new sqlite3.Database(path.join(app.getPath('userData'), "./mydb.db"));
 const fs = require("fs");
 const { Blob } = require("node:buffer");
 const ws = require("ws");
@@ -45,7 +45,7 @@ app.on("ready", () => {
       contextIsolation: false,
     },
   });
-  mainWindow.loadURL(`file://${__dirname}/build/index.html#electron`); // use #electron to know wether code runs through electron or webserver
+  mainWindow.loadURL(`file://${__dirname}/react/index.html#electron`); // use #electron to know wether code runs through electron or webserver
   tray = new Tray(path.join(__dirname, "./react-icon.png"));
   tray.setContextMenu(contextMenu);
   tray.setToolTip("PiDeck");
@@ -61,7 +61,7 @@ app.on("ready", () => {
     activeSocket = socket;
   });
 
-  expressApp.use(express.static("build"));
+  expressApp.use(express.static(path.join(__dirname, "./react")));
   expressApp.get("/button/:buttonId", (req, res) => {
     onButtonEvent(req.params.buttonId);
     res.sendStatus(200);

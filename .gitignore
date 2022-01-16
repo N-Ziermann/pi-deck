@@ -38,6 +38,10 @@ jspm_packages/
 
 # react build output
 build/
+react/
+
+#electron build output
+dist/
 
 # TypeScript v1 declaration files
 typings/
