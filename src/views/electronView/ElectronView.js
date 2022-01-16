@@ -13,7 +13,7 @@ if (window.require) {
 const COMMANDS = {
   0: "text",
   1: "press",
-  2: "run",
+  2: "open",
   3: "exec",
 };
 
@@ -90,7 +90,7 @@ export function ElectronView() {
               active={activeCommandType === 1}
             />
             <RadioButton
-              label="Program / Script"
+              label="Open file"
               index={2}
               setActiveItem={setActiveCommandType}
               active={activeCommandType === 2}
@@ -116,7 +116,7 @@ export function ElectronView() {
             )}
             {activeCommandType === 1 && (
               <input
-                placeholder="ctrl+alt"
+                placeholder="control+alt"
                 className="commandInput"
                 onChange={(e) => {
                   setCommand(e.target.value);

@@ -3,10 +3,14 @@ const { app, BrowserWindow, ipcMain, Tray, Menu } = require("electron");
 const path = require("path");
 const express = require("express");
 const sqlite3 = require("sqlite3").verbose();
-const db = new sqlite3.Database(path.join(app.getPath('userData'), "./mydb.db"));
+const db = new sqlite3.Database(
+  path.join(app.getPath("userData"), "./mydb.db")
+);
 const fs = require("fs");
 const { Blob } = require("node:buffer");
 const ws = require("ws");
+const { exec } = require("child_process");
+const open = require("open");
 
 let expressApp = express();
 let expressPort = 3000;
@@ -128,16 +132,22 @@ const onButtonEvent = (buttonId) => {
 
       switch (action.commandType) {
         case "text":
+          ks.sendText(action.command);
           console.log("Typing: " + action.command);
           break;
         case "press":
+          ks.sendCombination(action.command.split("+"));
           console.log("Pressing: " + action.command);
           break;
-        case "run":
-          console.log("Running: " + action.command);
+        case "open":
+          open(action.command);
+          console.log("Opening: " + action.command);
           break;
         case "exec":
-          console.log("Executing: " + action.command);
+          exec(action.command, (error, stdout, stderr) => {
+            console.log("Executing: " + action.command);
+            console.log("Command output: " + stdout);
+          });
           break;
         default:
           console.log("Invalid or no command given");
@@ -163,13 +173,11 @@ ipcMain.on("button:update", (event, payload) => {
       iconBuffer || null,
     ],
     (e) => {
-      if (payload.iconPath) {
-        // share info that button updated over websocket and ipc
-        if (activeSocket) {
-          activeSocket.send("buttonIcons:update");
-        }
-        mainWindow.webContents.send("buttonIcons:update");
+      // share info that button updated over websocket and ipc
+      if (activeSocket) {
+        activeSocket.send("buttonIcons:update");
       }
+      mainWindow.webContents.send("buttonIcons:update");
     }
   );
 });
