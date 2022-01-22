@@ -3,6 +3,7 @@ import { RadioButton } from "../../components/radioButton/RadioButton";
 import exampleIcon from "../../logo.svg";
 import { useState, useEffect, useRef } from "react";
 import "./ElectronView.css";
+import { FileUpload } from "../../components/fileUpload/FileUpload";
 
 // NEEDS WORK!
 let ipcRenderer;
@@ -41,6 +42,9 @@ export function ElectronView() {
     setCommand("");
     if (fileInputRef.current) {
       fileInputRef.current.value = null;
+      fileInputRef.current.dispatchEvent(
+        new Event("change", { bubbles: true })
+      );
     }
   }, [activeIndex]);
 
@@ -97,7 +101,7 @@ export function ElectronView() {
             />
             <RadioButton
               label="Command"
-              onSelect={console.log}
+              onSelect={setActiveCommandType}
               index={3}
               setActiveItem={setActiveCommandType}
               active={activeCommandType === 3}
@@ -145,11 +149,9 @@ export function ElectronView() {
               />
             )}
             <h3>Icon</h3>
-            <input
-              type="file"
+            <FileUpload
               accept="image/png, image/jpeg"
-              id="iconUpload"
-              ref={fileInputRef}
+              fileInputRef={fileInputRef}
             />
             <br />
             <br />

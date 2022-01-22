@@ -1,5 +1,6 @@
 * {
   box-sizing: border-box;
+  white-space: nowrap;
 }
 
 html, #root, body {
