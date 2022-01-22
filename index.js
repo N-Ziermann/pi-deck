@@ -12,6 +12,8 @@ const ws = require("ws");
 const { exec } = require("child_process");
 const open = require("open");
 
+const DEVMODE = false;
+
 let expressApp = express();
 let expressPort = 3000;
 
@@ -50,7 +52,10 @@ app.on("ready", () => {
     },
   });
   mainWindow.loadURL(`file://${__dirname}/react/index.html#electron`); // use #electron to know wether code runs through electron or webserver
-  tray = new Tray(path.join(__dirname, "./react-icon.png"));
+  if (!DEVMODE) {
+    mainWindow.removeMenu();
+  }
+  tray = new Tray(path.join(__dirname, "./trayIcon.png"));
   tray.setContextMenu(contextMenu);
   tray.setToolTip("PiDeck");
 

@@ -52,6 +52,7 @@
     "extends": null,
     "appId": "com.n-ziermann.pi-deck",
     "linux": {
+      "icon": "./desktopIcon.svg",
       "target": [
         "deb"
       ],
