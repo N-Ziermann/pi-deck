@@ -9,14 +9,14 @@
     "react:build": "BUILD_PATH='./react' react-scripts build",
     "start": "npm run react:build; electron .",
     "electron": "electron .",
-    "dist:linux": "npm run react:build; electron-builder --linux"
+    "dist:linux": "npm run react:build; electron-builder --linux",
+    "dist:linux:noRebuild": "electron-builder --linux"
   },
   "author": "N-Ziermann <n-ziermann@protonmail.com>",
   "license": "MIT",
   "dependencies": {
     "classnames": "^2.3.1",
     "express": "^4.17.2",
-    "node-key-sender": "^1.0.11",
     "open": "^8.4.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
@@ -49,6 +49,7 @@
     ]
   },
   "build": {
+    "extraResources": ["./extraResources/**"],
     "extends": null,
     "appId": "com.n-ziermann.pi-deck",
     "linux": {

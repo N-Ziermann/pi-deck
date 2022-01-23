@@ -1,4 +1,3 @@
-const ks = require("node-key-sender");
 const { app, BrowserWindow, ipcMain, Tray, Menu } = require("electron");
 const path = require("path");
 const express = require("express");
@@ -137,12 +136,32 @@ const onButtonEvent = (buttonId) => {
 
       switch (action.commandType) {
         case "text":
-          ks.sendText(action.command);
-          console.log("Typing: " + action.command);
+          exec(
+            `python3 ${path.join(
+              __dirname,
+              "../extraResources",
+              "./keyboardFunctions.py"
+            )} type "${action.command}"`,
+            (error, stdout, stderr) => {
+              console.log("Executing: " + action.command);
+              console.log("Command output: " + stdout);
+              console.log("Command error: " + stderr);
+            }
+          );
           break;
         case "press":
-          ks.sendCombination(action.command.split("+"));
-          console.log("Pressing: " + action.command);
+          exec(
+            `python3 ${path.join(
+              __dirname,
+              "../extraResources",
+              "./keyboardFunctions.py"
+            )} press ${action.command.split("+").join(" ")}`,
+            (error, stdout, stderr) => {
+              console.log("Executing: " + action.command);
+              console.log("Command output: " + stdout);
+              console.log("Command error: " + stderr);
+            }
+          );
           break;
         case "open":
           open(action.command);
