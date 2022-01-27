@@ -58,11 +58,11 @@ app.on("ready", () => {
       contextIsolation: false,
     },
   });
-  mainWindow.loadURL(`file://${__dirname}/react/index.html#electron`); // use #electron to know wether code runs through electron or webserver
+  mainWindow.loadURL(`file://${app.getAppPath()}/react/index.html#electron`); // use #electron to know wether code runs through electron or webserver
   if (!DEVMODE) {
     mainWindow.removeMenu();
   }
-  tray = new Tray(path.join(__dirname, "./trayIcon@2x.png"));
+  tray = new Tray(path.join(app.getAppPath(), "./trayIcon@2x.png"));
   tray.setContextMenu(contextMenu);
   tray.setToolTip("PiDeck");
 
@@ -78,7 +78,7 @@ app.on("ready", () => {
     activeSocket = socket;
   });
 
-  expressApp.use(express.static(path.join(__dirname, "./react")));
+  expressApp.use(express.static(path.join(app.getAppPath(), "./react")));
   expressApp.get("/button/:buttonId", (req, res) => {
     onButtonEvent(req.params.buttonId);
     res.sendStatus(200);
@@ -147,8 +147,8 @@ const onButtonEvent = (buttonId) => {
         case "text":
           exec(
             `python3 ${path.join(
-              __dirname,
-              "../extraResources",
+              app.getAppPath(),
+              "./extraResources",
               "./keyboardFunctions.py"
             )} type "${action.command}"`,
             (error, stdout, stderr) => {
@@ -161,7 +161,7 @@ const onButtonEvent = (buttonId) => {
         case "press":
           exec(
             `python3 ${path.join(
-              __dirname,
+              app.getAppPath(),
               "../extraResources",
               "./keyboardFunctions.py"
             )} press ${action.command.split("+").join(" ")}`,
