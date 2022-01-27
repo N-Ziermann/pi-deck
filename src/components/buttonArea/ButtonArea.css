@@ -23,6 +23,7 @@
   align-items: center;
   justify-content: center;
   max-height: 30vh;
+  min-width: 50px;
 }
 
 .active {

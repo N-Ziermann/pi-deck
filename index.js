@@ -28,15 +28,15 @@ const contextMenu = Menu.buildFromTemplate([
     label: "Show",
     click: () => {
       mainWindow.show();
-      app.dock.show()
+      app.dock?.show?.()
     },
   },
   {
     label: "Hide",
     click: () => {
       mainWindow.hide();
-      app.hide();
-      app.dock.hide();
+      app.hide?.();
+      app.dock?.hide?.();
     },
   },
   {
@@ -48,7 +48,7 @@ const contextMenu = Menu.buildFromTemplate([
   },
 ]);
 
-app.dock.hide()
+app.dock?.hide?.()
 app.on("ready", () => {
   prepareDatabase();
   mainWindow = new BrowserWindow({
@@ -70,7 +70,7 @@ app.on("ready", () => {
     if (!appStopped) {
       e.preventDefault();
       mainWindow.hide();
-      app.dock.hide();
+      app.dock?.hide?.();
     }
   });
 
