@@ -148,7 +148,7 @@ const onButtonEvent = (buttonId) => {
           exec(
             `python3 ${path.join(
               app.getAppPath(),
-              "./extraResources",
+              DEVMODE ? "./extraResources" : "../extraResources",
               "./keyboardFunctions.py"
             )} type "${action.command}"`,
             (error, stdout, stderr) => {
@@ -162,7 +162,7 @@ const onButtonEvent = (buttonId) => {
           exec(
             `python3 ${path.join(
               app.getAppPath(),
-              "../extraResources",
+              DEVMODE ? "./extraResources" : "../extraResources",
               "./keyboardFunctions.py"
             )} press ${action.command.split("+").join(" ")}`,
             (error, stdout, stderr) => {
