@@ -26,11 +26,18 @@ let appStopped = false;
 const contextMenu = Menu.buildFromTemplate([
   {
     label: "Show",
-    click: () => mainWindow.show(),
+    click: () => {
+      mainWindow.show();
+      app.dock.show()
+    },
   },
   {
     label: "Hide",
-    click: () => mainWindow.hide(),
+    click: () => {
+      mainWindow.hide();
+      app.hide();
+      app.dock.hide();
+    },
   },
   {
     label: "Quit",
@@ -41,6 +48,7 @@ const contextMenu = Menu.buildFromTemplate([
   },
 ]);
 
+app.dock.hide()
 app.on("ready", () => {
   prepareDatabase();
   mainWindow = new BrowserWindow({
@@ -54,7 +62,7 @@ app.on("ready", () => {
   if (!DEVMODE) {
     mainWindow.removeMenu();
   }
-  tray = new Tray(path.join(__dirname, "./trayIcon.png"));
+  tray = new Tray(path.join(__dirname, "./trayIcon@2x.png"));
   tray.setContextMenu(contextMenu);
   tray.setToolTip("PiDeck");
 
@@ -62,6 +70,7 @@ app.on("ready", () => {
     if (!appStopped) {
       e.preventDefault();
       mainWindow.hide();
+      app.dock.hide();
     }
   });
 

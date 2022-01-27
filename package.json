@@ -10,12 +10,14 @@
     "start": "npm run react:build; electron .",
     "electron": "electron .",
     "dist:linux": "npm run react:build; electron-builder --linux",
-    "dist:linux:noRebuild": "electron-builder --linux"
+    "dist:linux:noRebuild": "electron-builder --linux",
+    "dist:mac": "electron-builder --mac"
   },
   "author": "N-Ziermann <n-ziermann@protonmail.com>",
   "license": "MIT",
   "dependencies": {
     "classnames": "^2.3.1",
+    "cli-truncate": "^3.1.0",
     "express": "^4.17.2",
     "open": "^8.4.0",
     "react": "^17.0.2",
@@ -49,7 +51,9 @@
     ]
   },
   "build": {
-    "extraResources": ["./extraResources/**"],
+    "extraResources": [
+      "./extraResources/**"
+    ],
     "extends": null,
     "appId": "com.n-ziermann.pi-deck",
     "linux": {
@@ -58,6 +62,9 @@
         "deb"
       ],
       "category": "Utility"
+    },
+    "mac": {
+      "target": "dmg"
     }
   },
   "files": [
