@@ -19,6 +19,7 @@
     "classnames": "^2.3.1",
     "cli-truncate": "^3.1.0",
     "express": "^4.17.2",
+    "ip": "^1.1.5",
     "open": "^8.4.0",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
