@@ -64,6 +64,7 @@
       "category": "Utility"
     },
     "mac": {
+      "icon": "./desktopIcon.png",
       "target": "dmg"
     }
   },
