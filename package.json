@@ -1,7 +1,7 @@
 {
   "name": "PiDeck",
   "version": "1.0.0",
-  "description": "",
+  "description": "The PiDeck is a Web based Macro Keyboard thats configured using a Desktop App",
   "main": "index.js",
   "homepage": "./",
   "scripts": {
