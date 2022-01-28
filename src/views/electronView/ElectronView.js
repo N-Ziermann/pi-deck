@@ -24,12 +24,19 @@ export function ElectronView() {
   const [command, setCommand] = useState("");
   const fileInputRef = useRef();
   const [imageSources, setImageSources] = useState([]);
+  const [webIP, setWebIP] = useState("");
 
   useEffect(() => updateButtonSources(), []);
 
   useEffect(() => {
     ipcRenderer.on("buttonIcons:update", () => {
       updateButtonSources();
+    });
+
+    ipcRenderer.on("ipAddress", (event, ipAddress) => {
+      if (ipAddress) {
+        setWebIP(ipAddress);
+      }
     });
   }, []);
 
@@ -75,90 +82,91 @@ export function ElectronView() {
         onSelect={(index) => setActiveIndex(index)}
         icons={imageSources}
       />
-
-      <div className="configArea">
-        {activeIndex !== null && (
-          <>
-            <h1>Config</h1>
-            <h3>Type of Command</h3>
-            <RadioButton
-              label="Type Text"
-              index={0}
-              setActiveItem={setActiveCommandType}
-              active={activeCommandType === 0}
-            />
-            <RadioButton
-              label="Press Keycombination"
-              index={1}
-              setActiveItem={setActiveCommandType}
-              active={activeCommandType === 1}
-            />
-            <RadioButton
-              label="Open file"
-              index={2}
-              setActiveItem={setActiveCommandType}
-              active={activeCommandType === 2}
-            />
-            <RadioButton
-              label="Command"
-              onSelect={setActiveCommandType}
-              index={3}
-              setActiveItem={setActiveCommandType}
-              active={activeCommandType === 3}
-            />
-            <br />
-            <h3>Value</h3>
-            {activeCommandType === 0 && (
-              <input
-                placeholder="Hello World"
-                className="commandInput"
-                onChange={(e) => {
-                  setCommand(e.target.value);
-                }}
-                value={command}
+      <div>
+        <div className="configArea">
+          {activeIndex !== null && (
+            <>
+              <h1>Config</h1>
+              <h3>Type of Command</h3>
+              <RadioButton
+                label="Type Text"
+                index={0}
+                setActiveItem={setActiveCommandType}
+                active={activeCommandType === 0}
               />
-            )}
-            {activeCommandType === 1 && (
-              <input
-                placeholder="control+alt"
-                className="commandInput"
-                onChange={(e) => {
-                  setCommand(e.target.value);
-                }}
-                value={command}
+              <RadioButton
+                label="Press Keycombination"
+                index={1}
+                setActiveItem={setActiveCommandType}
+                active={activeCommandType === 1}
               />
-            )}
-            {activeCommandType === 2 && (
-              <input
-                placeholder="path/to/file"
-                className="commandInput"
-                onChange={(e) => {
-                  setCommand(e.target.value);
-                }}
-                value={command}
+              <RadioButton
+                label="Open file"
+                index={2}
+                setActiveItem={setActiveCommandType}
+                active={activeCommandType === 2}
               />
-            )}
-            {activeCommandType === 3 && (
-              <input
-                placeholder="shell command"
-                className="commandInput"
-                onChange={(e) => {
-                  setCommand(e.target.value);
-                }}
-                value={command}
+              <RadioButton
+                label="Command"
+                onSelect={setActiveCommandType}
+                index={3}
+                setActiveItem={setActiveCommandType}
+                active={activeCommandType === 3}
               />
-            )}
-            <h3>Icon</h3>
-            <FileUpload
-              accept="image/png, image/jpeg"
-              fileInputRef={fileInputRef}
-            />
-            <br />
-            <br />
-            <br />
-            <button onClick={() => applyChanges()}>Apply</button>
-          </>
-        )}
+              <br />
+              <h3>Value</h3>
+              {activeCommandType === 0 && (
+                <input
+                  placeholder="Hello World"
+                  className="commandInput"
+                  onChange={(e) => {
+                    setCommand(e.target.value);
+                  }}
+                  value={command}
+                />
+              )}
+              {activeCommandType === 1 && (
+                <input
+                  placeholder="control+alt"
+                  className="commandInput"
+                  onChange={(e) => {
+                    setCommand(e.target.value);
+                  }}
+                  value={command}
+                />
+              )}
+              {activeCommandType === 2 && (
+                <input
+                  placeholder="path/to/file"
+                  className="commandInput"
+                  onChange={(e) => {
+                    setCommand(e.target.value);
+                  }}
+                  value={command}
+                />
+              )}
+              {activeCommandType === 3 && (
+                <input
+                  placeholder="shell command"
+                  className="commandInput"
+                  onChange={(e) => {
+                    setCommand(e.target.value);
+                  }}
+                  value={command}
+                />
+              )}
+              <h3>Icon</h3>
+              <FileUpload
+                accept="image/png, image/jpeg"
+                fileInputRef={fileInputRef}
+              />
+              <br />
+              <br />
+              <button onClick={() => applyChanges()}>Apply</button>
+            </>
+          )}
+        </div>
+        {webIP !== "" && <p className="webUIAdress">{`Deck: http://${webIP}:3000`}</p>}
       </div>
     </>
   );

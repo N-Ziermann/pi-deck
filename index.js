@@ -10,6 +10,7 @@ const { Blob } = require("node:buffer");
 const ws = require("ws");
 const { exec } = require("child_process");
 const open = require("open");
+const ip = require("ip");
 
 const DEVMODE = false;
 
@@ -28,7 +29,7 @@ const contextMenu = Menu.buildFromTemplate([
     label: "Show",
     click: () => {
       mainWindow.show();
-      app.dock?.show?.()
+      app.dock?.show?.();
     },
   },
   {
@@ -48,7 +49,7 @@ const contextMenu = Menu.buildFromTemplate([
   },
 ]);
 
-app.dock?.hide?.()
+app.dock?.hide?.();
 app.on("ready", () => {
   prepareDatabase();
   mainWindow = new BrowserWindow({
@@ -58,7 +59,10 @@ app.on("ready", () => {
       contextIsolation: false,
     },
   });
-  mainWindow.loadURL(`file://${app.getAppPath()}/react/index.html#electron`); // use #electron to know wether code runs through electron or webserver
+  mainWindow.loadURL(`file://${app.getAppPath()}/react/index.html#electron`) // use #electron to know wether code runs through electron or webserver
+    .then(()=>{
+      mainWindow.webContents.send("ipAddress", ip.address());
+    })
   if (!DEVMODE) {
     mainWindow.removeMenu();
   }
