@@ -160,9 +160,7 @@ export function ElectronView() {
                 accept="image/png, image/jpeg"
                 fileInputRef={fileInputRef}
               />
-              <br />
-              <br />
-              <button onClick={() => applyChanges()}>Apply</button>
+              <button onClick={() => applyChanges()} className="applyButton">Apply</button>
             </>
           )}
         </div>

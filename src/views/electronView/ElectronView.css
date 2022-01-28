@@ -14,12 +14,21 @@
 .configArea {
   width: 300px;
   padding: 14px;
-  overflow: auto;
+  overflow: hidden auto;
   height: calc(100% - 4rem);
 }
 
 .webUIAdress {
   padding: 14px;
   text-align: right;
+  font-weight: bold;
+}
+
+.applyButton {
+  color: white;
+  background-color: var(--color-primary);
+  padding: 0.5rem 1rem;
+  border-radius: 5px;
+  margin-top: 1.5rem;
   font-weight: bold;
 }
