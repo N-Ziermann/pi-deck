@@ -62,7 +62,8 @@
     "linux": {
       "icon": "./desktopIcon.svg",
       "target": [
-        "deb"
+        "deb",
+        "AppImage"
       ],
       "category": "Utility"
     },
