@@ -1,6 +1,5 @@
 import { ButtonArea } from "../../components/buttonArea/ButtonArea";
 import { RadioButton } from "../../components/radioButton/RadioButton";
-import exampleIcon from "../../logo.svg";
 import { useState, useEffect, useRef } from "react";
 import "./ElectronView.css";
 import { FileUpload } from "../../components/fileUpload/FileUpload";
