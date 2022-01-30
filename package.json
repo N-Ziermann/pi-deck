@@ -6,19 +6,20 @@
   "homepage": "./",
   "scripts": {
     "react:start": "react-scripts start",
-    "build": "BUILD_PATH='./react' react-scripts build",
-    "start": "npm run react:build; electron .",
+    "build": "cross-env BUILD_PATH='./react' react-scripts build",
+    "start": "npm run build; electron .",
     "electron": "electron .",
-    "dist:linux": "npm run react:build; electron-builder --linux",
+    "dist:linux": "npm run build; electron-builder --linux",
     "dist:linux:noRebuild": "electron-builder --linux",
     "dist:mac:noRebuild": "electron-builder --mac",
-    "dist:mac": "npm run react:build; electron-builder --mac"
+    "dist:mac": "npm run build; electron-builder --mac"
   },
   "author": "N-Ziermann <n-ziermann@protonmail.com>",
   "license": "MIT",
   "dependencies": {
     "classnames": "^2.3.1",
     "cli-truncate": "^3.1.0",
+    "cross-env": "^7.0.3",
     "express": "^4.17.2",
     "ip": "^1.1.5",
     "open": "^8.4.0",
