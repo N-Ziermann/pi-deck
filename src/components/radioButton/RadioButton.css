@@ -1,0 +1,19 @@
+.radioButtonContainer {
+  display: flex;
+  align-items: center;
+}
+
+.radioButton {
+  width: 0.75rem;
+  height: 0.75rem;
+  min-width: 0.75rem;
+  min-height: 0.75rem;
+  background-color: white;
+  border: solid white 2px;
+  border-radius: 100%;
+  margin: 0 1ch;
+}
+
+.checked {
+  background-color: black;
+}
