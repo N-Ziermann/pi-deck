@@ -4,12 +4,6 @@ import { useState, useEffect, useRef } from 'react';
 import './ElectronView.css';
 import { FileUpload } from '../../components/fileUpload/FileUpload';
 
-// TODO: NEEDS WORK!
-let ipcRenderer;
-if (window.require) {
-  ipcRenderer = window.require('electron').ipcRenderer;
-}
-
 const COMMANDS = {
   0: 'text',
   1: 'press',
@@ -28,13 +22,13 @@ export function ElectronView() {
   useEffect(() => updateButtonSources(), []);
 
   useEffect(() => {
-    ipcRenderer.on('buttonIcons:update', () => {
+    window.electron.onUpdateIcons(() => {
       updateButtonSources();
     });
 
-    ipcRenderer.on('ipAddress', (event, ipAddress) => {
-      if (ipAddress) {
-        setWebIP(ipAddress);
+    window.electron.onRecieveIP((address) => {
+      if (address) {
+        setWebIP(address);
       }
     });
   }, []);
@@ -63,7 +57,7 @@ export function ElectronView() {
         ? fileInputRef.current.files[0].path
         : null,
     };
-    ipcRenderer.send('button:update', values);
+    window.electron.updateButton(values);
   };
 
   const updateButtonSources = () => {

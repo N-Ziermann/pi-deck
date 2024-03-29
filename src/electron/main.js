@@ -6,7 +6,7 @@ const db = new sqlite3.Database(
   path.join(app.getPath('userData'), './mydb.db')
 );
 const fs = require('fs');
-const { Blob } = require('node:buffer');
+require('node:buffer');
 const ws = require('ws');
 const { exec } = require('child_process');
 const open = require('open');
@@ -56,8 +56,10 @@ app.on('ready', () => {
   mainWindow = new BrowserWindow({
     show: false,
     webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
+      preload: path.join(
+        app.getAppPath(),
+        (DEVMODE ? '/src/electron' : '') + '/preload.js'
+      ),
     },
   });
   mainWindow
