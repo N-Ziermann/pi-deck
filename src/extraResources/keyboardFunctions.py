@@ -1,4 +1,5 @@
 import sys
+import time
 from pynput.keyboard import Key, Controller
 
 keyboard = Controller()
@@ -12,12 +13,14 @@ if commandType == "press":
     for key in commandContent:
         if key in Key._member_names_:
             key = Key[key]
-        keyboard.press(key);
+        keyboard.press(key)
     for key in reversed(commandContent):
         if key in Key._member_names_:
             key = Key[key]
-        keyboard.release(key);
+        keyboard.release(key)
 
+# prevent process from terminating while pynput is still typing
+time.sleep(3000)
 
 #     List of special Keys:
 #

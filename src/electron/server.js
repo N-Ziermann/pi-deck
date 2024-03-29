@@ -69,7 +69,7 @@ function onButtonEvent(buttonId) {
       exec(
         `python3 ${join(
           app.getAppPath(),
-          isDev ? './src/extraResources' : '../extraResources',
+          isDev ? './src/extraResources' : '../src/extraResources',
           './keyboardFunctions.py',
         )} type "${action.command}"`,
         (_, stdout, stderr) => {
@@ -83,7 +83,7 @@ function onButtonEvent(buttonId) {
       exec(
         `python3 ${join(
           app.getAppPath(),
-          isDev ? './src/extraResources' : '../extraResources',
+          isDev ? './src/extraResources' : '../src/extraResources',
           './keyboardFunctions.py',
         )} press ${action.command.split('+').join(' ')}`,
         (_, stdout, stderr) => {
