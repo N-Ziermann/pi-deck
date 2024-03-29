@@ -59,7 +59,6 @@ app.on('ready', () => {
       contextIsolation: false,
     },
   });
-  // TODO: not a good workaround
   mainWindow
     .loadFile(path.join(app.getAppPath(), '/react/index.html'))
     .then(() => {
@@ -68,7 +67,7 @@ app.on('ready', () => {
   if (!DEVMODE) {
     mainWindow.removeMenu();
   }
-  tray = new Tray(path.join(app.getAppPath(), './trayIcon@2x.png'));
+  tray = new Tray(path.join(app.getAppPath(), './icons/trayIcon@2x.png'));
   tray.setContextMenu(contextMenu);
   tray.setToolTip('PiDeck');
 
