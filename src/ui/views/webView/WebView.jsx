@@ -3,7 +3,9 @@ import './WebView.css';
 import { useEffect, useState } from 'react';
 
 export function WebView() {
-  const [imageSources, setImageSources] = useState([]);
+  const [imageSources, setImageSources] = useState(
+    /** @type {string[]} */ ([]),
+  );
 
   useEffect(() => {
     const socket = new WebSocket(`ws://${window.location.hostname}:3000`);
@@ -16,6 +18,7 @@ export function WebView() {
 
   useEffect(() => updateButtonSources(), []);
 
+  /** @param {number} id */
   const onSelect = async (id) => {
     try {
       await fetch(`./button/${id}`);
@@ -25,7 +28,8 @@ export function WebView() {
   };
 
   const updateButtonSources = () => {
-    let paths = [];
+    /** @type {string[]} */
+    const paths = [];
     for (let i = 0; i < 18; i++) {
       paths.push(`./image/${i}?${new Date().getTime()}`);
     }

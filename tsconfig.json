@@ -1,0 +1,14 @@
+{
+  "compilerOptions": {
+    "allowJs": true,
+    "checkJs": true,
+    "noEmit": true,
+    "skipLibCheck": true,
+    "strict": true,
+    "jsx": "preserve",
+    "noImplicitAny": true,
+    "esModuleInterop": true,
+    "types": ["./index.d.ts"]
+  },
+  "include": ["./index.d.ts", "./src/**/*.js", "./src/**/*.jsx"]
+}

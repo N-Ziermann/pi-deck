@@ -1,26 +1,30 @@
+require('node:buffer');
 const { app, BrowserWindow, ipcMain, Tray, Menu } = require('electron');
+const { exec } = require('child_process');
 const path = require('path');
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
-const db = new sqlite3.Database(
-  path.join(app.getPath('userData'), './mydb.db')
-);
 const fs = require('fs');
-require('node:buffer');
 const ws = require('ws');
-const { exec } = require('child_process');
 const open = require('open');
 const ip = require('ip');
 
 const isDev = process.env.NODE_ENV === 'development';
 
-let expressApp = express();
-let expressPort = 3000;
+const db = new sqlite3.Database(
+  path.join(app.getPath('userData'), './mydb.db'),
+);
 
-let websocketServer = new ws.Server({ noServer: true });
+const expressApp = express();
+const expressPort = 3000;
+// TODO: why noServer when theres an express server?
+const websocketServer = new ws.Server({ noServer: true });
+/** @type {ws} */
 let activeSocket;
 
+/** @type {BrowserWindow} */
 let mainWindow;
+/** @type {Tray} */
 let tray;
 let appStopped = false;
 
@@ -57,7 +61,7 @@ app.on('ready', () => {
     webPreferences: {
       preload: path.join(
         app.getAppPath(),
-        (isDev ? '/src/electron' : '') + '/preload.js'
+        (isDev ? '/src/electron' : '') + '/preload.js',
       ),
     },
   });
@@ -104,7 +108,7 @@ app.on('ready', () => {
           res.contentType('image/png');
           res.send(buffer);
         }
-      }
+      },
     );
   });
 
@@ -136,10 +140,11 @@ const prepareDatabase = () => {
           });
         }
       }
-    }
+    },
   );
 };
 
+/** @param {string} buttonId */
 const onButtonEvent = (buttonId) => {
   db.all(
     'SELECT commandType, command FROM buttons WHERE id = ?;',
@@ -156,13 +161,13 @@ const onButtonEvent = (buttonId) => {
             `python3 ${path.join(
               app.getAppPath(),
               isDev ? './src/extraResources' : '../extraResources',
-              './keyboardFunctions.py'
+              './keyboardFunctions.py',
             )} type "${action.command}"`,
             (error, stdout, stderr) => {
               console.log('Executing: ' + action.command);
               console.log('Command output: ' + stdout);
               console.log('Command error: ' + stderr);
-            }
+            },
           );
           break;
         case 'press':
@@ -170,13 +175,13 @@ const onButtonEvent = (buttonId) => {
             `python3 ${path.join(
               app.getAppPath(),
               isDev ? './src/extraResources' : '../extraResources',
-              './keyboardFunctions.py'
+              './keyboardFunctions.py',
             )} press ${action.command.split('+').join(' ')}`,
             (error, stdout, stderr) => {
               console.log('Executing: ' + action.command);
               console.log('Command output: ' + stdout);
               console.log('Command error: ' + stderr);
-            }
+            },
           );
           break;
         case 'open':
@@ -192,11 +197,12 @@ const onButtonEvent = (buttonId) => {
         default:
           console.log('Invalid or no command given');
       }
-    }
+    },
   );
 };
 
 ipcMain.on('button:update', (event, payload) => {
+  // @ts-ignore TODO
   if (event.activeIndex === null) {
     return;
   }
@@ -218,6 +224,6 @@ ipcMain.on('button:update', (event, payload) => {
         activeSocket.send('buttonIcons:update');
       }
       mainWindow.webContents.send('buttonIcons:update');
-    }
+    },
   );
 });

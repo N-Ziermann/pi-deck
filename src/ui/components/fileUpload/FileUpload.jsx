@@ -1,9 +1,17 @@
-import { useState } from "react";
-import { Upload } from "react-feather";
-import "./FileUpload.css";
+import { useState } from 'react';
+import { Upload } from 'react-feather';
+import './FileUpload.css';
 
+/**
+ * @param {{
+ *   accept: string;
+ *   fileInputRef: import('react').RefObject<HTMLInputElement>;
+ * }} props
+ */
 export function FileUpload(props) {
-  const [activeText, setActiveText] = useState(null);
+  const [activeText, setActiveText] = useState(
+    /** @type {string | null} */ (null),
+  );
 
   return (
     <>
@@ -12,13 +20,13 @@ export function FileUpload(props) {
         accept={props.accept}
         ref={props.fileInputRef}
         className="inputElement"
-        onChange={(e) => setActiveText(e?.target?.files?.[0]?.name)}
+        onChange={(e) => setActiveText(e?.target?.files?.[0]?.name ?? null)}
       />
       <div
         className="iconTextWrapper"
         onClick={() => props.fileInputRef?.current?.click?.()}
       >
-        <Upload size={20} /> <p>{activeText || "Upload an Icon"}</p>
+        <Upload size={20} /> <p>{activeText || 'Upload an Icon'}</p>
       </div>
     </>
   );

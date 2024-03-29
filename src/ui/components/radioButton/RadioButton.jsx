@@ -1,6 +1,14 @@
-import "./RadioButton.css";
-import classNames from "classnames";
+import './RadioButton.css';
+import classNames from 'classnames';
 
+/**
+ * @param {{
+ *   setActiveItem: (index: number) => void;
+ *   index: number;
+ *   label: string;
+ *   active: boolean;
+ * }} props
+ */
 export function RadioButton(props) {
   return (
     <div
@@ -9,7 +17,7 @@ export function RadioButton(props) {
       }}
       className="radioButtonContainer"
     >
-      <div className={classNames("radioButton", { checked: props.active })} />
+      <div className={classNames('radioButton', { checked: props.active })} />
       <label>{props.label}</label>
     </div>
   );
