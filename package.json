@@ -1,57 +1,39 @@
 {
-  "name": "PiDeck",
+  "name": "pi-deck",
   "version": "2.0.0",
   "description": "The PiDeck is a Web based Macro Keyboard thats configured using a Desktop App",
+  "author": "N-Ziermann <n-ziermann@protonmail.com>",
+  "license": "MIT",
   "main": "index.js",
   "homepage": "./",
   "scripts": {
-    "react:start": "react-scripts start",
-    "build": "cross-env BUILD_PATH='./react' react-scripts build",
-    "start": "npm run build; electron .",
+    "react:dev": "vite",
+    "react:build": "vite build",
+    "dev": "npm run react:build; electron .",
     "electron": "electron .",
-    "dist:linux": "npm run build; electron-builder --linux",
+    "dist:linux": "npm run react:build; electron-builder --linux",
     "dist:linux:noRebuild": "electron-builder --linux",
-    "dist:mac:noRebuild": "electron-builder --mac",
-    "dist:mac": "npm run build; electron-builder --mac"
+    "dist:mac": "npm run react:build; electron-builder --mac",
+    "dist:mac:noRebuild": "electron-builder --mac"
   },
-  "author": "N-Ziermann <n-ziermann@protonmail.com>",
-  "license": "MIT",
   "dependencies": {
-    "classnames": "^2.3.1",
+    "classnames": "^2.5.1",
     "cli-truncate": "^3.1.0",
     "cross-env": "^7.0.3",
-    "express": "^4.17.2",
-    "ip": "^1.1.5",
-    "open": "^8.4.0",
+    "express": "^4.19.2",
+    "ip": "^1.1.9",
+    "open": "^8.4.2",
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
-    "react-feather": "^2.0.9",
-    "sqlite3": "^5.0.2",
-    "web-vitals": "^2.1.3",
-    "ws": "^8.4.2"
+    "react-feather": "^2.0.10",
+    "sqlite3": "^5.1.7",
+    "ws": "^8.16.0"
   },
   "devDependencies": {
-    "electron": "^16.0.6",
-    "electron-builder": "^22.14.5",
-    "react-scripts": "5.0.0"
-  },
-  "eslintConfig": {
-    "extends": [
-      "react-app",
-      "react-app/jest"
-    ]
-  },
-  "browserslist": {
-    "production": [
-      ">0.2%",
-      "not dead",
-      "not op_mini all"
-    ],
-    "development": [
-      "last 1 chrome version",
-      "last 1 firefox version",
-      "last 1 safari version"
-    ]
+    "@vitejs/plugin-react": "^4.2.1",
+    "electron": "^16.2.8",
+    "electron-builder": "^22.14.13",
+    "vite": "^5.2.7"
   },
   "build": {
     "extraResources": [

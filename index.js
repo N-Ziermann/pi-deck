@@ -1,16 +1,16 @@
-const { app, BrowserWindow, ipcMain, Tray, Menu } = require("electron");
-const path = require("path");
-const express = require("express");
-const sqlite3 = require("sqlite3").verbose();
+const { app, BrowserWindow, ipcMain, Tray, Menu } = require('electron');
+const path = require('path');
+const express = require('express');
+const sqlite3 = require('sqlite3').verbose();
 const db = new sqlite3.Database(
-  path.join(app.getPath("userData"), "./mydb.db")
+  path.join(app.getPath('userData'), './mydb.db')
 );
-const fs = require("fs");
-const { Blob } = require("node:buffer");
-const ws = require("ws");
-const { exec } = require("child_process");
-const open = require("open");
-const ip = require("ip");
+const fs = require('fs');
+const { Blob } = require('node:buffer');
+const ws = require('ws');
+const { exec } = require('child_process');
+const open = require('open');
+const ip = require('ip');
 
 const DEVMODE = false;
 
@@ -26,14 +26,14 @@ let appStopped = false;
 
 const contextMenu = Menu.buildFromTemplate([
   {
-    label: "Show",
+    label: 'Show',
     click: () => {
       mainWindow.show();
       app.dock?.show?.();
     },
   },
   {
-    label: "Hide",
+    label: 'Hide',
     click: () => {
       mainWindow.hide();
       app.hide?.();
@@ -41,7 +41,7 @@ const contextMenu = Menu.buildFromTemplate([
     },
   },
   {
-    label: "Quit",
+    label: 'Quit',
     click: () => {
       appStopped = true;
       app.quit();
@@ -50,7 +50,7 @@ const contextMenu = Menu.buildFromTemplate([
 ]);
 
 app.dock?.hide?.();
-app.on("ready", () => {
+app.on('ready', () => {
   prepareDatabase();
   mainWindow = new BrowserWindow({
     show: false,
@@ -59,18 +59,20 @@ app.on("ready", () => {
       contextIsolation: false,
     },
   });
-  mainWindow.loadURL(`file://${app.getAppPath()}/react/index.html#electron`) // use #electron to know wether code runs through electron or webserver
-    .then(()=>{
-      mainWindow.webContents.send("ipAddress", ip.address());
-    })
+  // TODO: not a good workaround
+  mainWindow
+    .loadFile(path.join(app.getAppPath(), '/react/index.html'))
+    .then(() => {
+      mainWindow.webContents.send('ipAddress', ip.address());
+    });
   if (!DEVMODE) {
     mainWindow.removeMenu();
   }
-  tray = new Tray(path.join(app.getAppPath(), "./trayIcon@2x.png"));
+  tray = new Tray(path.join(app.getAppPath(), './trayIcon@2x.png'));
   tray.setContextMenu(contextMenu);
-  tray.setToolTip("PiDeck");
+  tray.setToolTip('PiDeck');
 
-  mainWindow.on("close", (e) => {
+  mainWindow.on('close', (e) => {
     if (!appStopped) {
       e.preventDefault();
       mainWindow.hide();
@@ -78,19 +80,19 @@ app.on("ready", () => {
     }
   });
 
-  websocketServer.on("connection", (socket) => {
+  websocketServer.on('connection', (socket) => {
     activeSocket = socket;
   });
 
-  expressApp.use(express.static(path.join(app.getAppPath(), "./react")));
-  expressApp.get("/button/:buttonId", (req, res) => {
+  expressApp.use(express.static(path.join(app.getAppPath(), './react')));
+  expressApp.get('/button/:buttonId', (req, res) => {
     onButtonEvent(req.params.buttonId);
     res.sendStatus(200);
   });
 
-  expressApp.get("/image/:imageId", (req, res) => {
+  expressApp.get('/image/:imageId', (req, res) => {
     db.all(
-      "SELECT image FROM buttons WHERE id = ?;",
+      'SELECT image FROM buttons WHERE id = ?;',
       [req.params.imageId],
       (err, rows) => {
         console.log(err);
@@ -98,7 +100,7 @@ app.on("ready", () => {
           res.sendStatus(204);
         } else {
           const buffer = rows[0].image;
-          res.contentType("image/png");
+          res.contentType('image/png');
           res.send(buffer);
         }
       }
@@ -106,9 +108,9 @@ app.on("ready", () => {
   });
 
   const webServer = expressApp.listen(expressPort);
-  webServer.on("upgrade", (req, socket, head) => {
+  webServer.on('upgrade', (req, socket, head) => {
     websocketServer.handleUpgrade(req, socket, head, (socket) => {
-      websocketServer.emit("connection", socket, req);
+      websocketServer.emit('connection', socket, req);
     });
   });
 });
@@ -126,9 +128,9 @@ const prepareDatabase = () => {
     (error) => {
       if (!error) {
         for (let i = 0; i < 18; i++) {
-          db.all("SELECT id FROM buttons WHERE id = ?", [i], (err, rows) => {
+          db.all('SELECT id FROM buttons WHERE id = ?', [i], (err, rows) => {
             if (rows.length === 0) {
-              db.run("INSERT INTO buttons (id) VALUES(?)", [i]);
+              db.run('INSERT INTO buttons (id) VALUES(?)', [i]);
             }
           });
         }
@@ -139,7 +141,7 @@ const prepareDatabase = () => {
 
 const onButtonEvent = (buttonId) => {
   db.all(
-    "SELECT commandType, command FROM buttons WHERE id = ?;",
+    'SELECT commandType, command FROM buttons WHERE id = ?;',
     [buttonId],
     (err, rows) => {
       if (err || rows.length === 0) {
@@ -148,52 +150,52 @@ const onButtonEvent = (buttonId) => {
       const action = rows[0];
 
       switch (action.commandType) {
-        case "text":
+        case 'text':
           exec(
             `python3 ${path.join(
               app.getAppPath(),
-              DEVMODE ? "./extraResources" : "../extraResources",
-              "./keyboardFunctions.py"
+              DEVMODE ? './extraResources' : '../extraResources',
+              './keyboardFunctions.py'
             )} type "${action.command}"`,
             (error, stdout, stderr) => {
-              console.log("Executing: " + action.command);
-              console.log("Command output: " + stdout);
-              console.log("Command error: " + stderr);
+              console.log('Executing: ' + action.command);
+              console.log('Command output: ' + stdout);
+              console.log('Command error: ' + stderr);
             }
           );
           break;
-        case "press":
+        case 'press':
           exec(
             `python3 ${path.join(
               app.getAppPath(),
-              DEVMODE ? "./extraResources" : "../extraResources",
-              "./keyboardFunctions.py"
-            )} press ${action.command.split("+").join(" ")}`,
+              DEVMODE ? './extraResources' : '../extraResources',
+              './keyboardFunctions.py'
+            )} press ${action.command.split('+').join(' ')}`,
             (error, stdout, stderr) => {
-              console.log("Executing: " + action.command);
-              console.log("Command output: " + stdout);
-              console.log("Command error: " + stderr);
+              console.log('Executing: ' + action.command);
+              console.log('Command output: ' + stdout);
+              console.log('Command error: ' + stderr);
             }
           );
           break;
-        case "open":
+        case 'open':
           open(action.command);
-          console.log("Opening: " + action.command);
+          console.log('Opening: ' + action.command);
           break;
-        case "exec":
+        case 'exec':
           exec(action.command, (error, stdout, stderr) => {
-            console.log("Executing: " + action.command);
-            console.log("Command output: " + stdout);
+            console.log('Executing: ' + action.command);
+            console.log('Command output: ' + stdout);
           });
           break;
         default:
-          console.log("Invalid or no command given");
+          console.log('Invalid or no command given');
       }
     }
   );
 };
 
-ipcMain.on("button:update", (event, payload) => {
+ipcMain.on('button:update', (event, payload) => {
   if (event.activeIndex === null) {
     return;
   }
@@ -212,9 +214,9 @@ ipcMain.on("button:update", (event, payload) => {
     (e) => {
       // share info that button updated over websocket and ipc
       if (activeSocket) {
-        activeSocket.send("buttonIcons:update");
+        activeSocket.send('buttonIcons:update');
       }
-      mainWindow.webContents.send("buttonIcons:update");
+      mainWindow.webContents.send('buttonIcons:update');
     }
   );
 });

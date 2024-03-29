@@ -1,5 +1,5 @@
-import "./ButtonArea.css";
-import classNames from "classnames";
+import './ButtonArea.css';
+import classNames from 'classnames';
 
 export function ButtonArea(props) {
   const renderButtons = () =>
@@ -7,9 +7,9 @@ export function ButtonArea(props) {
       <button
         key={index}
         onClick={() => props.onSelect(index)}
-        className={classNames({ "active": props.activeIndex === index })}
+        className={classNames({ active: props.activeIndex === index })}
       >
-        <img src={icon} alt=""/>
+        <img src={icon} alt="" />
       </button>
     ));
 

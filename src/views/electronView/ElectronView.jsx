@@ -1,38 +1,38 @@
-import { ButtonArea } from "../../components/buttonArea/ButtonArea";
-import { RadioButton } from "../../components/radioButton/RadioButton";
-import { useState, useEffect, useRef } from "react";
-import "./ElectronView.css";
-import { FileUpload } from "../../components/fileUpload/FileUpload";
+import { ButtonArea } from '../../components/buttonArea/ButtonArea';
+import { RadioButton } from '../../components/radioButton/RadioButton';
+import { useState, useEffect, useRef } from 'react';
+import './ElectronView.css';
+import { FileUpload } from '../../components/fileUpload/FileUpload';
 
-// NEEDS WORK!
+// TODO: NEEDS WORK!
 let ipcRenderer;
 if (window.require) {
-  ipcRenderer = window.require("electron").ipcRenderer;
+  ipcRenderer = window.require('electron').ipcRenderer;
 }
 
 const COMMANDS = {
-  0: "text",
-  1: "press",
-  2: "open",
-  3: "exec",
+  0: 'text',
+  1: 'press',
+  2: 'open',
+  3: 'exec',
 };
 
 export function ElectronView() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [activeCommandType, setActiveCommandType] = useState(0);
-  const [command, setCommand] = useState("");
+  const [command, setCommand] = useState('');
   const fileInputRef = useRef();
   const [imageSources, setImageSources] = useState([]);
-  const [webIP, setWebIP] = useState("");
+  const [webIP, setWebIP] = useState('');
 
   useEffect(() => updateButtonSources(), []);
 
   useEffect(() => {
-    ipcRenderer.on("buttonIcons:update", () => {
+    ipcRenderer.on('buttonIcons:update', () => {
       updateButtonSources();
     });
 
-    ipcRenderer.on("ipAddress", (event, ipAddress) => {
+    ipcRenderer.on('ipAddress', (event, ipAddress) => {
       if (ipAddress) {
         setWebIP(ipAddress);
       }
@@ -40,16 +40,16 @@ export function ElectronView() {
   }, []);
 
   useEffect(() => {
-    setCommand("");
+    setCommand('');
   }, [activeCommandType]);
 
   useEffect(() => {
     setActiveCommandType(0);
-    setCommand("");
+    setCommand('');
     if (fileInputRef.current) {
       fileInputRef.current.value = null;
       fileInputRef.current.dispatchEvent(
-        new Event("change", { bubbles: true })
+        new Event('change', { bubbles: true })
       );
     }
   }, [activeIndex]);
@@ -58,12 +58,12 @@ export function ElectronView() {
     const values = {
       activeIndex,
       activeCommandType: COMMANDS[activeCommandType],
-      command: command !== "" ? command : null,
+      command: command !== '' ? command : null,
       iconPath: fileInputRef?.current?.files?.[0]
         ? fileInputRef.current.files[0].path
         : null,
     };
-    ipcRenderer.send("button:update", values);
+    ipcRenderer.send('button:update', values);
   };
 
   const updateButtonSources = () => {
@@ -159,11 +159,15 @@ export function ElectronView() {
                 accept="image/png, image/jpeg"
                 fileInputRef={fileInputRef}
               />
-              <button onClick={() => applyChanges()} className="applyButton">Apply</button>
+              <button onClick={() => applyChanges()} className="applyButton">
+                Apply
+              </button>
             </>
           )}
         </div>
-        {webIP !== "" && <p className="webUIAdress">{`Deck: http://${webIP}:3000`}</p>}
+        {webIP !== '' && (
+          <p className="webUIAdress">{`Deck: http://${webIP}:3000`}</p>
+        )}
       </div>
     </>
   );
