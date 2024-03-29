@@ -3,7 +3,7 @@ const { app, BrowserWindow, ipcMain, Tray, Menu } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const ip = require('ip');
-const { db, prepareDatabase } = require('./db');
+const { db } = require('./db');
 const { activeSocket, initServer } = require('./server');
 const { isDev } = require('./env');
 
@@ -40,8 +40,6 @@ const contextMenu = Menu.buildFromTemplate([
 
 app.dock?.hide?.();
 app.on('ready', async () => {
-  prepareDatabase();
-
   mainWindow = new BrowserWindow({
     show: false,
     webPreferences: {
