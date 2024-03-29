@@ -12,6 +12,7 @@ const { exec } = require('child_process');
 const open = require('open');
 const ip = require('ip');
 
+// TODO: use env
 const DEVMODE = false;
 
 let expressApp = express();
@@ -153,7 +154,7 @@ const onButtonEvent = (buttonId) => {
           exec(
             `python3 ${path.join(
               app.getAppPath(),
-              DEVMODE ? './extraResources' : '../extraResources',
+              DEVMODE ? './src/extraResources' : '../extraResources',
               './keyboardFunctions.py'
             )} type "${action.command}"`,
             (error, stdout, stderr) => {
@@ -167,7 +168,7 @@ const onButtonEvent = (buttonId) => {
           exec(
             `python3 ${path.join(
               app.getAppPath(),
-              DEVMODE ? './extraResources' : '../extraResources',
+              DEVMODE ? './src/extraResources' : '../extraResources',
               './keyboardFunctions.py'
             )} press ${action.command.split('+').join(' ')}`,
             (error, stdout, stderr) => {

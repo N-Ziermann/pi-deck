@@ -4,7 +4,7 @@
   "description": "The PiDeck is a Web based Macro Keyboard thats configured using a Desktop App",
   "author": "N-Ziermann <n-ziermann@protonmail.com>",
   "license": "MIT",
-  "main": "index.js",
+  "main": "src/electron/main.js",
   "homepage": "./",
   "scripts": {
     "react:dev": "vite",
@@ -37,7 +37,7 @@
   },
   "build": {
     "extraResources": [
-      "./extraResources/**"
+      "./src/extraResources/**"
     ],
     "extends": null,
     "appId": "com.n-ziermann.pi-deck",
