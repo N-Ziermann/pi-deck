@@ -12,8 +12,7 @@ const { exec } = require('child_process');
 const open = require('open');
 const ip = require('ip');
 
-// TODO: use env
-const DEVMODE = false;
+const isDev = process.env.NODE_ENV === 'development';
 
 let expressApp = express();
 let expressPort = 3000;
@@ -58,7 +57,7 @@ app.on('ready', () => {
     webPreferences: {
       preload: path.join(
         app.getAppPath(),
-        (DEVMODE ? '/src/electron' : '') + '/preload.js'
+        (isDev ? '/src/electron' : '') + '/preload.js'
       ),
     },
   });
@@ -67,7 +66,7 @@ app.on('ready', () => {
     .then(() => {
       mainWindow.webContents.send('ipAddress', ip.address());
     });
-  if (!DEVMODE) {
+  if (!isDev) {
     mainWindow.removeMenu();
   }
   tray = new Tray(path.join(app.getAppPath(), './icons/trayIcon@2x.png'));
@@ -156,7 +155,7 @@ const onButtonEvent = (buttonId) => {
           exec(
             `python3 ${path.join(
               app.getAppPath(),
-              DEVMODE ? './src/extraResources' : '../extraResources',
+              isDev ? './src/extraResources' : '../extraResources',
               './keyboardFunctions.py'
             )} type "${action.command}"`,
             (error, stdout, stderr) => {
@@ -170,7 +169,7 @@ const onButtonEvent = (buttonId) => {
           exec(
             `python3 ${path.join(
               app.getAppPath(),
-              DEVMODE ? './src/extraResources' : '../extraResources',
+              isDev ? './src/extraResources' : '../extraResources',
               './keyboardFunctions.py'
             )} press ${action.command.split('+').join(' ')}`,
             (error, stdout, stderr) => {
