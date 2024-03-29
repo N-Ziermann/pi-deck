@@ -45,7 +45,7 @@ app.on('ready', async () => {
     webPreferences: {
       preload: path.join(
         app.getAppPath(),
-        (isDev ? '/src/electron' : '') + '/preload.js',
+        (isDev ? '.' : '..') + '/src/electron/preload.cjs',
       ),
     },
   });
@@ -85,20 +85,16 @@ ipcMain.on('button:update', (event, payload) => {
   if (payload.iconPath) {
     iconBuffer = fs.readFileSync(payload.iconPath);
   }
-  db.run(
-    `REPLACE INTO buttons (id, commandType, command, image) VALUES(?,?,?,?)`,
-    [
+  db.prepare(
+    `REPLACE INTO buttons (id, commandType, command, image) VALUES(?,?,?,?)`).bind([
       payload.activeIndex,
       payload.activeCommandType,
       payload.command,
       iconBuffer || null,
-    ],
-    () => {
-      // share info that button updated over websocket and ipc
-      if (activeSocket.socket) {
-        activeSocket.socket.send('buttonIcons:update');
-      }
-      mainWindow.webContents.send('buttonIcons:update');
-    },
-  );
+    ]).run();
+  // share info that button updated over websocket and ipc
+  if (activeSocket.socket) {
+    activeSocket.socket.send('buttonIcons:update');
+  }
+  mainWindow.webContents.send('buttonIcons:update');
 });

@@ -15,9 +15,13 @@
     "dist:linux:noRebuild": "electron-builder --linux",
     "dist:mac": "npm run react:build; electron-builder --mac",
     "dist:mac:noRebuild": "electron-builder --mac",
-    "lint:types": "tsc"
+    "lint:types": "tsc",
+    "rebuild": "electron-rebuild -f -w better-sqlite3",
+    "postinstall": "electron-builder install-app-deps"
   },
   "dependencies": {
+    "@types/better-sqlite3": "^7.6.9",
+    "better-sqlite3": "^9.4.3",
     "classnames": "^2.5.1",
     "cli-truncate": "^3.1.0",
     "cross-env": "^7.0.3",
@@ -28,7 +32,6 @@
     "react": "^17.0.2",
     "react-dom": "^17.0.2",
     "react-feather": "^2.0.10",
-    "sqlite3": "^5.0.2",
     "ws": "^8.16.0"
   },
   "devDependencies": {
@@ -40,12 +43,15 @@
     "@vitejs/plugin-react": "^4.2.1",
     "electron": "^16.2.8",
     "electron-builder": "^24.13.3",
+    "electron-rebuild": "^3.2.9",
+    "prettier": "^3.2.5",
     "typescript": "^5.4.3",
     "vite": "^5.2.7"
   },
   "build": {
     "extraResources": [
-      "./src/extraResources/**"
+      "./src/extraResources/**",
+      "./src/electron/preload.cjs"
     ],
     "extends": null,
     "appId": "com.n-ziermann.pi-deck",

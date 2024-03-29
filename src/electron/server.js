@@ -26,21 +26,22 @@ function initServer() {
   });
 
   expressApp.get('/image/:imageId', (req, res) => {
-    db.all(
-      'SELECT image FROM buttons WHERE id = ?;',
-      [req.params.imageId],
-      (err, rows) => {
-        console.log(err);
-        if (rows.length === 0) {
-          res.sendStatus(204);
-        } else {
-          const buffer = rows[0].image;
-          res.contentType('image/png');
-          res.send(buffer);
-        }
-      },
-    );
-  });
+    const rows = db.prepare(
+      'SELECT image FROM buttons WHERE id = ?;').bind(
+        [req.params.imageId]).all();
+
+    if (rows.length === 0) {
+      res.sendStatus(204);
+    } else {
+      // @ts-ignore TODO
+      const buffer = rows[0].image;
+      res.contentType('image/png');
+      res.send(buffer);
+    }
+  }
+
+  );
+
 
   const webServer = expressApp.listen(expressPort);
 
@@ -54,59 +55,59 @@ function initServer() {
 // TODO: does this really belong here?
 /** @param {string} buttonId */
 function onButtonEvent(buttonId) {
-  db.all(
-    'SELECT commandType, command FROM buttons WHERE id = ?;',
-    [buttonId],
-    (err, rows) => {
-      if (err || rows.length === 0) {
-        return;
-      }
-      const action = rows[0];
+  const rows = db.prepare(
+    'SELECT commandType, command FROM buttons WHERE id = ?;').bind(buttonId).all();
 
-      switch (action.commandType) {
-        case 'text':
-          exec(
-            `python3 ${join(
-              app.getAppPath(),
-              isDev ? './src/extraResources' : '../extraResources',
-              './keyboardFunctions.py',
-            )} type "${action.command}"`,
-            (_, stdout, stderr) => {
-              console.log('Executing: ' + action.command);
-              console.log('Command output: ' + stdout);
-              console.log('Command error: ' + stderr);
-            },
-          );
-          break;
-        case 'press':
-          exec(
-            `python3 ${join(
-              app.getAppPath(),
-              isDev ? './src/extraResources' : '../extraResources',
-              './keyboardFunctions.py',
-            )} press ${action.command.split('+').join(' ')}`,
-            (_, stdout, stderr) => {
-              console.log('Executing: ' + action.command);
-              console.log('Command output: ' + stdout);
-              console.log('Command error: ' + stderr);
-            },
-          );
-          break;
-        case 'open':
-          open(action.command);
-          console.log('Opening: ' + action.command);
-          break;
-        case 'exec':
-          exec(action.command, (error, stdout, stderr) => {
-            console.log('Executing: ' + action.command);
-            console.log('Command output: ' + stdout);
-          });
-          break;
-        default:
-          console.log('Invalid or no command given');
-      }
-    },
-  );
+  if (rows.length === 0) {
+    return;
+  }
+  /** @type any */
+  const action = rows[0];
+
+  switch (action.commandType) {
+    case 'text':
+      exec(
+        `python3 ${join(
+          app.getAppPath(),
+          isDev ? './src/extraResources' : '../extraResources',
+          './keyboardFunctions.py',
+        )} type "${action.command}"`,
+        (_, stdout, stderr) => {
+          console.log('Executing: ' + action.command);
+          console.log('Command output: ' + stdout);
+          console.log('Command error: ' + stderr);
+        },
+      );
+      break;
+    case 'press':
+      exec(
+        `python3 ${join(
+          app.getAppPath(),
+          isDev ? './src/extraResources' : '../extraResources',
+          './keyboardFunctions.py',
+        )} press ${action.command.split('+').join(' ')}`,
+        (_, stdout, stderr) => {
+          console.log('Executing: ' + action.command);
+          console.log('Command output: ' + stdout);
+          console.log('Command error: ' + stderr);
+        },
+      );
+      break;
+    case 'open':
+      open(action.command);
+      console.log('Opening: ' + action.command);
+      break;
+    case 'exec':
+      exec(action.command, (error, stdout, stderr) => {
+        console.log('Executing: ' + action.command);
+        console.log('Command output: ' + stdout);
+      });
+      break;
+    default:
+      console.log('Invalid or no command given');
+  }
+
+
 }
 
 module.exports = {

@@ -1,6 +1,5 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-// TODO: make sure this is part of the final bundle
 // TODO: make communication between the ipcRenderer and electron typesafe
 contextBridge.exposeInMainWorld('electron', {
   /** @type {typeof window.electron.isElectronProcess} */

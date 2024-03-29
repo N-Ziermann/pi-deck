@@ -10,5 +10,5 @@
     "esModuleInterop": true,
     "types": ["./index.d.ts"]
   },
-  "include": ["./index.d.ts", "./src/**/*.js", "./src/**/*.jsx"]
+  "include": ["./index.d.ts", "./src/**/*.js", "./src/**/*.jsx", "src/electron/preload.cjs"]
 }
