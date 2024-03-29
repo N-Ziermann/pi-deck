@@ -7,11 +7,11 @@ const { db, prepareDatabase } = require('./db');
 const { activeSocket, initServer } = require('./server');
 const { isDev } = require('./env');
 
+let appStopped = false;
 /** @type {BrowserWindow} */
 let mainWindow;
 /** @type {Tray} */
 let tray;
-let appStopped = false;
 
 const contextMenu = Menu.buildFromTemplate([
   {
@@ -39,7 +39,7 @@ const contextMenu = Menu.buildFromTemplate([
 ]);
 
 app.dock?.hide?.();
-app.on('ready', () => {
+app.on('ready', async () => {
   prepareDatabase();
 
   mainWindow = new BrowserWindow({
@@ -52,11 +52,12 @@ app.on('ready', () => {
     },
   });
 
-  mainWindow
-    .loadFile(path.join(app.getAppPath(), '/react/index.html'))
-    .then(() => {
-      mainWindow.webContents.send('ipAddress', ip.address());
-    });
+  if (isDev) {
+    await mainWindow.loadURL('http://localhost:5123');
+  } else {
+    await mainWindow.loadFile(path.join(app.getAppPath(), '/react/index.html'));
+  }
+  mainWindow.webContents.send('ipAddress', ip.address());
 
   if (!isDev) {
     mainWindow.removeMenu();
@@ -94,7 +95,7 @@ ipcMain.on('button:update', (event, payload) => {
       payload.command,
       iconBuffer || null,
     ],
-    (e) => {
+    () => {
       // share info that button updated over websocket and ipc
       if (activeSocket.socket) {
         activeSocket.socket.send('buttonIcons:update');

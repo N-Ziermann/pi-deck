@@ -8,9 +8,9 @@
   "homepage": "./",
   "scripts": {
     "react:dev": "vite",
+    "electron:dev": "NODE_ENV=development electron .",
+    "dev": "npm run react:dev & npm run electron:dev",
     "react:build": "vite build",
-    "dev": "npm run react:build; npm run dev:noRebuild",
-    "dev:noRebuild": "NODE_ENV=development electron .",
     "dist:linux": "npm run react:build; electron-builder --linux",
     "dist:linux:noRebuild": "electron-builder --linux",
     "dist:mac": "npm run react:build; electron-builder --mac",
