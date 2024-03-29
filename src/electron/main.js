@@ -1,26 +1,11 @@
 require('node:buffer');
 const { app, BrowserWindow, ipcMain, Tray, Menu } = require('electron');
-const { exec } = require('child_process');
 const path = require('path');
-const express = require('express');
-const sqlite3 = require('sqlite3').verbose();
 const fs = require('fs');
-const ws = require('ws');
-const open = require('open');
 const ip = require('ip');
-
-const isDev = process.env.NODE_ENV === 'development';
-
-const db = new sqlite3.Database(
-  path.join(app.getPath('userData'), './mydb.db'),
-);
-
-const expressApp = express();
-const expressPort = 3000;
-// TODO: why noServer when theres an express server?
-const websocketServer = new ws.Server({ noServer: true });
-/** @type {ws} */
-let activeSocket;
+const { db, prepareDatabase } = require('./db');
+const { activeSocket, initServer } = require('./server');
+const { isDev } = require('./env');
 
 /** @type {BrowserWindow} */
 let mainWindow;
@@ -56,6 +41,7 @@ const contextMenu = Menu.buildFromTemplate([
 app.dock?.hide?.();
 app.on('ready', () => {
   prepareDatabase();
+
   mainWindow = new BrowserWindow({
     show: false,
     webPreferences: {
@@ -65,14 +51,17 @@ app.on('ready', () => {
       ),
     },
   });
+
   mainWindow
     .loadFile(path.join(app.getAppPath(), '/react/index.html'))
     .then(() => {
       mainWindow.webContents.send('ipAddress', ip.address());
     });
+
   if (!isDev) {
     mainWindow.removeMenu();
   }
+
   tray = new Tray(path.join(app.getAppPath(), './icons/trayIcon@2x.png'));
   tray.setContextMenu(contextMenu);
   tray.setToolTip('PiDeck');
@@ -85,121 +74,8 @@ app.on('ready', () => {
     }
   });
 
-  websocketServer.on('connection', (socket) => {
-    activeSocket = socket;
-  });
-
-  expressApp.use(express.static(path.join(app.getAppPath(), './react')));
-  expressApp.get('/button/:buttonId', (req, res) => {
-    onButtonEvent(req.params.buttonId);
-    res.sendStatus(200);
-  });
-
-  expressApp.get('/image/:imageId', (req, res) => {
-    db.all(
-      'SELECT image FROM buttons WHERE id = ?;',
-      [req.params.imageId],
-      (err, rows) => {
-        console.log(err);
-        if (rows.length === 0) {
-          res.sendStatus(204);
-        } else {
-          const buffer = rows[0].image;
-          res.contentType('image/png');
-          res.send(buffer);
-        }
-      },
-    );
-  });
-
-  const webServer = expressApp.listen(expressPort);
-  webServer.on('upgrade', (req, socket, head) => {
-    websocketServer.handleUpgrade(req, socket, head, (socket) => {
-      websocketServer.emit('connection', socket, req);
-    });
-  });
+  initServer();
 });
-
-const prepareDatabase = () => {
-  db.run(
-    `CREATE TABLE IF NOT EXISTS buttons (
-      id INTEGER NOT NULL,
-      commandType TEXT,
-      command TEXT,
-      image BLOB,
-      PRIMARY KEY (id)
-    );`,
-    [],
-    (error) => {
-      if (!error) {
-        for (let i = 0; i < 18; i++) {
-          db.all('SELECT id FROM buttons WHERE id = ?', [i], (err, rows) => {
-            if (rows.length === 0) {
-              db.run('INSERT INTO buttons (id) VALUES(?)', [i]);
-            }
-          });
-        }
-      }
-    },
-  );
-};
-
-/** @param {string} buttonId */
-const onButtonEvent = (buttonId) => {
-  db.all(
-    'SELECT commandType, command FROM buttons WHERE id = ?;',
-    [buttonId],
-    (err, rows) => {
-      if (err || rows.length === 0) {
-        return;
-      }
-      const action = rows[0];
-
-      switch (action.commandType) {
-        case 'text':
-          exec(
-            `python3 ${path.join(
-              app.getAppPath(),
-              isDev ? './src/extraResources' : '../extraResources',
-              './keyboardFunctions.py',
-            )} type "${action.command}"`,
-            (error, stdout, stderr) => {
-              console.log('Executing: ' + action.command);
-              console.log('Command output: ' + stdout);
-              console.log('Command error: ' + stderr);
-            },
-          );
-          break;
-        case 'press':
-          exec(
-            `python3 ${path.join(
-              app.getAppPath(),
-              isDev ? './src/extraResources' : '../extraResources',
-              './keyboardFunctions.py',
-            )} press ${action.command.split('+').join(' ')}`,
-            (error, stdout, stderr) => {
-              console.log('Executing: ' + action.command);
-              console.log('Command output: ' + stdout);
-              console.log('Command error: ' + stderr);
-            },
-          );
-          break;
-        case 'open':
-          open(action.command);
-          console.log('Opening: ' + action.command);
-          break;
-        case 'exec':
-          exec(action.command, (error, stdout, stderr) => {
-            console.log('Executing: ' + action.command);
-            console.log('Command output: ' + stdout);
-          });
-          break;
-        default:
-          console.log('Invalid or no command given');
-      }
-    },
-  );
-};
 
 ipcMain.on('button:update', (event, payload) => {
   // @ts-ignore TODO
@@ -220,8 +96,8 @@ ipcMain.on('button:update', (event, payload) => {
     ],
     (e) => {
       // share info that button updated over websocket and ipc
-      if (activeSocket) {
-        activeSocket.send('buttonIcons:update');
+      if (activeSocket.socket) {
+        activeSocket.socket.send('buttonIcons:update');
       }
       mainWindow.webContents.send('buttonIcons:update');
     },
