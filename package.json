@@ -17,6 +17,7 @@
     "dist:mac:noRebuild": "electron-builder --mac",
     "dist:win": "npm run react:build; electron-builder --win",
     "dist:win:noRebuild": "electron-builder --win",
+    "lint": "eslint ./src --ext .js,.jsx,.cjs",
     "lint:types": "tsc",
     "rebuild": "electron-rebuild -f -w better-sqlite3",
     "postinstall": "electron-builder install-app-deps"
@@ -46,6 +47,8 @@
     "@vitejs/plugin-react": "^4.2.1",
     "electron": "^28.2.9",
     "electron-builder": "^24.13.3",
+    "eslint": "^8.57.0",
+    "eslint-config-airbnb": "^19.0.4",
     "prettier": "^3.2.5",
     "typescript": "^5.4.3",
     "vite": "^5.2.7"

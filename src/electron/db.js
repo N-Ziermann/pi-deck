@@ -11,13 +11,16 @@ db.prepare(
     command TEXT,
     image BLOB,
     PRIMARY KEY (id)
-  );`
+  );`,
 ).run();
 
 for (let i = 0; i < 18; i++) {
-  const buttonId = db.prepare('SELECT id FROM buttons WHERE id = ?').bind(i).get()
+  const buttonId = db
+    .prepare('SELECT id FROM buttons WHERE id = ?')
+    .bind(i)
+    .get();
   if (!buttonId) {
-    db.prepare('INSERT INTO buttons (id) VALUES(?)').bind([i]).run()
+    db.prepare('INSERT INTO buttons (id) VALUES(?)').bind([i]).run();
   }
 }
 

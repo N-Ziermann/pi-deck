@@ -1,6 +1,7 @@
+import { useEffect, useState } from 'react';
+
 import { ButtonArea } from '../../components/buttonArea/ButtonArea';
 import './WebView.css';
-import { useEffect, useState } from 'react';
 
 export function WebView() {
   const [imageSources, setImageSources] = useState(
@@ -9,7 +10,7 @@ export function WebView() {
 
   useEffect(() => {
     const socket = new WebSocket(`ws://${window.location.hostname}:3000`);
-    socket.onmessage = function (event) {
+    socket.onmessage = (event) => {
       if (event.data === 'buttonIcons:update') {
         updateButtonSources();
       }

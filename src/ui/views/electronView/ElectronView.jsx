@@ -1,6 +1,6 @@
+import { useState, useEffect, useRef } from 'react';
 import { ButtonArea } from '../../components/buttonArea/ButtonArea';
 import { RadioButton } from '../../components/radioButton/RadioButton';
-import { useState, useEffect, useRef } from 'react';
 import './ElectronView.css';
 import { FileUpload } from '../../components/fileUpload/FileUpload';
 
@@ -152,7 +152,12 @@ export function ElectronView() {
                 accept="image/png, image/jpeg"
                 fileInputRef={fileInputRef}
               />
-              <button onClick={() => applyChanges()} className="applyButton">
+              <button
+                // TODO: maybe use a form and turn this into type="apply"?
+                type="button"
+                onClick={() => applyChanges()}
+                className="applyButton"
+              >
                 Apply
               </button>
             </>

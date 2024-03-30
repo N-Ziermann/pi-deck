@@ -1,9 +1,10 @@
+/* eslint-disable no-undef */
 const express = require('express');
 const ws = require('ws');
-const { db } = require('./db');
 const { join } = require('path');
 const { app } = require('electron');
 const { exec } = require('child_process');
+const { db } = require('./db');
 const { isDev } = require('./env');
 
 const expressApp = express();
@@ -26,9 +27,10 @@ function initServer() {
   });
 
   expressApp.get('/image/:imageId', (req, res) => {
-    const rows = db.prepare(
-      'SELECT image FROM buttons WHERE id = ?;').bind(
-        [req.params.imageId]).all();
+    const rows = db
+      .prepare('SELECT image FROM buttons WHERE id = ?;')
+      .bind([req.params.imageId])
+      .all();
 
     if (rows.length === 0) {
       res.sendStatus(204);
@@ -38,16 +40,13 @@ function initServer() {
       res.contentType('image/png');
       res.send(buffer);
     }
-  }
-
-  );
-
+  });
 
   const webServer = expressApp.listen(expressPort);
 
   webServer.on('upgrade', (req, socket, head) => {
-    websocketServer.handleUpgrade(req, socket, head, (socket) => {
-      websocketServer.emit('connection', socket, req);
+    websocketServer.handleUpgrade(req, socket, head, (sock) => {
+      websocketServer.emit('connection', sock, req);
     });
   });
 }
@@ -55,8 +54,10 @@ function initServer() {
 // TODO: does this really belong here?
 /** @param {string} buttonId */
 function onButtonEvent(buttonId) {
-  const rows = db.prepare(
-    'SELECT commandType, command FROM buttons WHERE id = ?;').bind(buttonId).all();
+  const rows = db
+    .prepare('SELECT commandType, command FROM buttons WHERE id = ?;')
+    .bind(buttonId)
+    .all();
 
   if (rows.length === 0) {
     return;
@@ -73,9 +74,9 @@ function onButtonEvent(buttonId) {
           './keyboardFunctions.py',
         )} type "${action.command}"`,
         (_, stdout, stderr) => {
-          console.log('Executing: ' + action.command);
-          console.log('Command output: ' + stdout);
-          console.log('Command error: ' + stderr);
+          console.log(`Executing: ${action.command}`);
+          console.log(`Command output: ${stdout}`);
+          console.log(`Command error: ${stderr}`);
         },
       );
       break;
@@ -87,27 +88,27 @@ function onButtonEvent(buttonId) {
           './keyboardFunctions.py',
         )} press ${action.command.split('+').join(' ')}`,
         (_, stdout, stderr) => {
-          console.log('Executing: ' + action.command);
-          console.log('Command output: ' + stdout);
-          console.log('Command error: ' + stderr);
+          console.log(`Executing: ${action.command}`);
+          console.log(`Command output: ${stdout}`);
+          console.log(`Command error: ${stderr}`);
         },
       );
       break;
     case 'open':
+      // eslint-disable-next-line no-restricted-globals
       open(action.command);
-      console.log('Opening: ' + action.command);
+      console.log(`Opening: ${action.command}`);
       break;
     case 'exec':
-      exec(action.command, (error, stdout, stderr) => {
-        console.log('Executing: ' + action.command);
-        console.log('Command output: ' + stdout);
+      exec(action.command, (_, stdout, stderr) => {
+        console.log(`Executing: ${action.command}`);
+        console.log(`Command output: ${stdout}`);
+        console.log(`Command error: ${stderr}`);
       });
       break;
     default:
       console.log('Invalid or no command given');
   }
-
-
 }
 
 module.exports = {

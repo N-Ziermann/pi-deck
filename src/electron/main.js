@@ -46,7 +46,7 @@ app.on('ready', async () => {
       devTools: isDev,
       preload: path.join(
         app.getAppPath(),
-        (isDev ? '.' : '..') + '/src/electron/preload.cjs',
+        `${isDev ? '.' : '..'}/src/electron/preload.cjs`,
       ),
     },
   });
@@ -87,12 +87,15 @@ ipcMain.on('button:update', (event, payload) => {
     iconBuffer = fs.readFileSync(payload.iconPath);
   }
   db.prepare(
-    `REPLACE INTO buttons (id, commandType, command, image) VALUES(?,?,?,?)`).bind([
+    'REPLACE INTO buttons (id, commandType, command, image) VALUES(?,?,?,?)',
+  )
+    .bind([
       payload.activeIndex,
       payload.activeCommandType,
       payload.command,
       iconBuffer || null,
-    ]).run();
+    ])
+    .run();
   // share info that button updated over websocket and ipc
   if (activeSocket.socket) {
     activeSocket.socket.send('buttonIcons:update');

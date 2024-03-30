@@ -9,6 +9,7 @@ import classNames from 'classnames';
  *   active: boolean;
  * }} props
  */
+// TODO: try to use the actual html radio input
 export function RadioButton(props) {
   return (
     <div

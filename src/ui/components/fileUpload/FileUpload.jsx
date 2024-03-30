@@ -22,12 +22,13 @@ export function FileUpload(props) {
         className="inputElement"
         onChange={(e) => setActiveText(e?.target?.files?.[0]?.name ?? null)}
       />
-      <div
+      <button
+        type="button"
         className="iconTextWrapper"
         onClick={() => props.fileInputRef?.current?.click?.()}
       >
         <Upload size={20} /> <p>{activeText || 'Upload an Icon'}</p>
-      </div>
+      </button>
     </>
   );
 }
