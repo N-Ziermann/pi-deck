@@ -43,7 +43,7 @@ app.on('ready', async () => {
   mainWindow = new BrowserWindow({
     show: false,
     webPreferences: {
-      devTools: isDev,
+      devTools: !isDev,
       preload: path.join(
         app.getAppPath(),
         `${isDev ? '.' : '..'}/src/electron/preload.cjs`,

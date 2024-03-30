@@ -23,8 +23,8 @@ export function WebView() {
   const onSelect = async (id) => {
     try {
       await fetch(`./button/${id}`);
-    } catch (e) {
-      console.log(e);
+    } catch {
+      /** Do nothing */
     }
   };
 

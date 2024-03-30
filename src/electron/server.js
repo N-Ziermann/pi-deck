@@ -4,6 +4,7 @@ const ws = require('ws');
 const { join } = require('path');
 const { app } = require('electron');
 const { exec } = require('child_process');
+const { z } = require('zod');
 const { db } = require('./db');
 const { isDev } = require('./env');
 
@@ -31,19 +32,15 @@ function initServer() {
       .prepare('SELECT image FROM buttons WHERE id = ?;')
       .bind([req.params.imageId])
       .all();
-
-    // TODO: zod
-    if (
-      !rows[0] ||
-      typeof rows[0] !== 'object' ||
-      !('image' in rows[0]) ||
-      !(rows[0].image instanceof Blob)
-    ) {
-      res.sendStatus(204);
-    } else {
-      const buffer = rows[0].image;
+    try {
+      const test = z.object({
+        image: z.instanceof(Buffer),
+      });
+      const { image } = test.parse(rows[0]);
       res.contentType('image/png');
-      res.send(buffer);
+      res.send(image);
+    } catch {
+      res.sendStatus(204);
     }
   });
 
@@ -64,11 +61,12 @@ function onButtonEvent(buttonId) {
     .bind(buttonId)
     .all();
 
-  if (rows.length === 0) {
-    return;
-  }
-  /** @type any */
-  const action = rows[0];
+  const action = z
+    .object({
+      commandType: z.string().nullable(),
+      command: z.string().nullable(),
+    })
+    .parse(rows[0]);
 
   switch (action.commandType) {
     case 'text':
@@ -79,9 +77,9 @@ function onButtonEvent(buttonId) {
           './keyboardFunctions.py',
         )} type "${action.command}"`,
         (_, stdout, stderr) => {
-          console.log(`Executing: ${action.command}`);
-          console.log(`Command output: ${stdout}`);
-          console.log(`Command error: ${stderr}`);
+          console.info(`Executing: ${action.command}`);
+          console.info(`Command output: ${stdout}`);
+          console.info(`Command error: ${stderr}`);
         },
       );
       break;
@@ -91,28 +89,28 @@ function onButtonEvent(buttonId) {
           app.getAppPath(),
           isDev ? './src/extraResources' : '../src/extraResources',
           './keyboardFunctions.py',
-        )} press ${action.command.split('+').join(' ')}`,
+        )} press ${(action.command ?? '').split('+').join(' ')}`,
         (_, stdout, stderr) => {
-          console.log(`Executing: ${action.command}`);
-          console.log(`Command output: ${stdout}`);
-          console.log(`Command error: ${stderr}`);
+          console.info(`Executing: ${action.command}`);
+          console.info(`Command output: ${stdout}`);
+          console.info(`Command error: ${stderr}`);
         },
       );
       break;
     case 'open':
       // eslint-disable-next-line no-restricted-globals
-      open(action.command);
-      console.log(`Opening: ${action.command}`);
+      open(action.command ?? '');
+      console.info(`Opening: ${action.command}`);
       break;
     case 'exec':
-      exec(action.command, (_, stdout, stderr) => {
-        console.log(`Executing: ${action.command}`);
-        console.log(`Command output: ${stdout}`);
-        console.log(`Command error: ${stderr}`);
+      exec(action.command ?? '', (_, stdout, stderr) => {
+        console.info(`Executing: ${action.command}`);
+        console.info(`Command output: ${stdout}`);
+        console.info(`Command error: ${stderr}`);
       });
       break;
     default:
-      console.log('Invalid or no command given');
+      console.error('Invalid or no command given');
   }
 }
 
