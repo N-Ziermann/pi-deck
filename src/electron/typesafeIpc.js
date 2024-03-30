@@ -9,7 +9,12 @@ const { ipcMain } = require('electron');
 function ipcMainOnBuilder(key) {
   /** @type {IpcOnFunction<Key>} */
   return (callback) => {
-    ipcMain.on(key, (_, payload) => callback(payload));
+    /** @type {(_: any, payload: any) => void} */
+    const cb = (_, payload) => callback(payload);
+    ipcMain.on(key, cb);
+    return () => {
+      ipcMain.off(key, cb);
+    };
   };
 }
 

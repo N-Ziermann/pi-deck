@@ -34,17 +34,19 @@ export function ElectronView() {
   }, []);
 
   useEffect(() => {
-    window.electron.onUpdateIcons(() => {
+    const unsub = window.electron.onUpdateIcons(() => {
       updateButtonSources();
     });
+    return unsub;
   }, []);
 
   useEffect(() => {
-    window.electron.onRecieveIP((address) => {
+    const unsub = window.electron.onRecieveIP((address) => {
       if (address) {
         setWebIP(address);
       }
     });
+    return unsub;
   }, []);
 
   const resetForm = useCallback(() => {

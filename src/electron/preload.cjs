@@ -1,17 +1,14 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
-// TODO: consider unsub functions
 contextBridge.exposeInMainWorld('electron', {
   /** @type {typeof window.electron.isElectronProcess} */
   isElectronProcess: true,
   /** @type {typeof window.electron.onUpdateIcons} */
-  onUpdateIcons: (callback) => {
-    ipcOnBuilder('buttonIcons:update')(() => callback(null));
-  },
+  onUpdateIcons: (callback) =>
+    ipcOnBuilder('buttonIcons:update')(() => callback(null)),
   /** @type {typeof window.electron.onRecieveIP} */
-  onRecieveIP: (callback) => {
-    ipcOnBuilder('ipAddress')((ipAddress) => callback(ipAddress));
-  },
+  onRecieveIP: (callback) =>
+    ipcOnBuilder('ipAddress')((ipAddress) => callback(ipAddress)),
   /** @type {typeof window.electron.updateButton} */
   updateButton: (values) => {
     ipcSendBuilder('button:update')(values);
@@ -27,7 +24,12 @@ contextBridge.exposeInMainWorld('electron', {
 function ipcOnBuilder(key) {
   /** @type {IpcOnFunction<Key>} */
   return (callback) => {
-    ipcRenderer.on(key, (_, payload) => callback(payload));
+    /** @type {(_: any, payload: any) => void} */
+    const cb = (_, payload) => callback(payload);
+    ipcRenderer.on(key, cb);
+    return () => {
+      ipcRenderer.off(key, cb);
+    };
   };
 }
 

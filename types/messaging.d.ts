@@ -5,9 +5,12 @@ type IpcPayloadMapping = {
 };
 
 // helpers to make ipc processes typesafe
+
+type UnsubscribeFunction = () => void;
+
 type IpcOnFunction<Key extends keyof IpcPayloadMapping> = (
   callback: (payload: IpcPayloadMapping[Key]) => void,
-) => void;
+) => UnsubscribeFunction;
 
 type IpcSendFunction<Key extends keyof IpcPayloadMapping> = (
   payload: IpcPayloadMapping[Key],

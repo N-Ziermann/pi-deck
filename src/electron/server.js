@@ -16,7 +16,7 @@ function initServer() {
     activeSocket.socket = socket;
   });
 
-  // TODO: in dev mode this needs to proxy the devserver
+  // TODO: in dev mode this needs to proxy the devserver (seems to break hmr)
   expressApp.use(express.static(join(app.getAppPath(), './ui-dist')));
 
   defineEndpoints(expressApp);
