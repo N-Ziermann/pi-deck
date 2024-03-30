@@ -75,6 +75,6 @@
   },
   "files": [
     "*.js",
-    "react/"
+    "ui-dist/"
   ]
 }

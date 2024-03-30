@@ -15,7 +15,7 @@ node_modules/
 
 # build output
 build/
-react/
+ui-dist/
 dist/
 out/
 

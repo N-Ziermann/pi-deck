@@ -19,7 +19,7 @@ function initServer() {
     activeSocket.socket = socket;
   });
 
-  expressApp.use(express.static(join(app.getAppPath(), './react')));
+  expressApp.use(express.static(join(app.getAppPath(), './ui-dist')));
 
   expressApp.get('/button/:buttonId', (req, res) => {
     onButtonEvent(req.params.buttonId);

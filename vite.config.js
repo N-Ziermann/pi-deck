@@ -10,7 +10,7 @@ export default defineConfig({
     alias: { '/src': path.resolve(process.cwd(), 'src') },
   },
   build: {
-    outDir: '../react/',
+    outDir: '../ui-dist/',
   },
   server: {
     port: 5123,

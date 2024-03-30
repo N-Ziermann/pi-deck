@@ -54,7 +54,9 @@ app.on('ready', async () => {
   if (isDev) {
     await mainWindow.loadURL('http://localhost:5123');
   } else {
-    await mainWindow.loadFile(path.join(app.getAppPath(), '/react/index.html'));
+    await mainWindow.loadFile(
+      path.join(app.getAppPath(), '/ui-dist/index.html'),
+    );
   }
   mainWindow.webContents.send('ipAddress', ip.address());
 
