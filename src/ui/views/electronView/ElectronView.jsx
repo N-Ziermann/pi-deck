@@ -1,20 +1,32 @@
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import { ButtonArea } from '../../components/buttonArea/ButtonArea';
 import { RadioButton } from '../../components/radioButton/RadioButton';
 import './ElectronView.css';
 import { FileUpload } from '../../components/fileUpload/FileUpload';
 
-const COMMANDS = ['text', 'press', 'open', 'exec'];
+const InputNames = {
+  file: 'file',
+  command: 'command',
+  commandType: 'commandType',
+};
+
+const InputPlacerholders = {
+  text: 'Hello World',
+  press: 'ctrl+a',
+  open: '/path/to/file',
+  exec: 'echo 1',
+};
 
 export function ElectronView() {
-  const [activeIndex, setActiveIndex] = useState(0);
-  const [activeCommandType, setActiveCommandType] = useState(0);
-  const [command, setCommand] = useState('');
+  const [inputPlaceholder, setInputPlacerholder] = useState(
+    InputPlacerholders.text,
+  );
+  const [activeButtonIndex, setActiveButtonIndex] = useState(0);
   const [webIP, setWebIP] = useState('');
   const [imageSources, setImageSources] = useState(
     /** @type {string[]} */ ([]),
   );
-  const fileInputRef = useRef(/** @type {HTMLInputElement | null} */ (null));
+  const formRef = useRef(/** @type {HTMLFormElement | null} */ (null));
 
   useEffect(() => {
     updateButtonSources();
@@ -24,7 +36,9 @@ export function ElectronView() {
     window.electron.onUpdateIcons(() => {
       updateButtonSources();
     });
+  }, []);
 
+  useEffect(() => {
     window.electron.onRecieveIP((address) => {
       if (address) {
         setWebIP(address);
@@ -32,138 +46,128 @@ export function ElectronView() {
     });
   }, []);
 
-  useEffect(() => {
-    setCommand('');
-  }, [activeCommandType]);
+  const resetForm = useCallback(() => {
+    formRef.current?.reset();
+    formRef.current
+      ?.querySelector(`[name="${InputNames.file}"]`)
+      ?.dispatchEvent(new Event('change', { bubbles: true }));
+  }, []);
 
   useEffect(() => {
-    setActiveCommandType(0);
-    setCommand('');
-    if (fileInputRef.current) {
-      fileInputRef.current.value = '';
-      fileInputRef.current.dispatchEvent(
-        new Event('change', { bubbles: true }),
-      );
-    }
-  }, [activeIndex]);
+    resetForm();
+  }, [activeButtonIndex, resetForm]);
 
-  const applyChanges = () => {
-    const values = {
-      activeIndex,
-      activeCommandType: COMMANDS[activeCommandType],
-      command: command !== '' ? command : null,
-      iconPath: fileInputRef?.current?.files?.[0]
-        ? fileInputRef.current.files[0].path
-        : null,
-    };
-    window.electron.updateButton(values);
-  };
+  const updateButtonSources = () =>
+    setImageSources(
+      Array.from({ length: 18 }).map(
+        (_, i) => `http://localhost:3000/image/${i}?${new Date().getTime()}`,
+      ),
+    );
 
-  const updateButtonSources = () => {
-    /** @type {string[]} */
-    const urls = [];
-    for (let i = 0; i < 18; i++) {
-      urls.push(`http://localhost:3000/image/${i}?${new Date().getTime()}`);
-    }
-    return setImageSources(urls);
-  };
+  const onSubmit = useCallback(
+    /** @param {React.FormEvent<HTMLFormElement>} e */
+    (e) => {
+      e.preventDefault();
+      const form = /** @type {HTMLFormElement} */ (e.target);
+      const formData = new FormData(form);
+      const iconFile = formData.get(InputNames.file)?.valueOf();
+      window.electron.updateButton({
+        activeIndex: activeButtonIndex,
+        activeCommandType:
+          formData.get(InputNames.commandType)?.toString() ?? '',
+        command: formData.get(InputNames.command)?.toString() ?? null,
+        iconPath: iconFile && iconFile instanceof File ? iconFile.path : null,
+      });
+      resetForm();
+    },
+    [activeButtonIndex, resetForm],
+  );
 
   return (
     <>
       <ButtonArea
-        activeIndex={activeIndex}
-        onSelect={(index) => setActiveIndex(index)}
+        activeIndex={activeButtonIndex}
+        onSelect={(index) => setActiveButtonIndex(index)}
         icons={imageSources}
       />
       <div>
-        <div className="configArea">
-          {activeIndex !== null && (
-            <>
+        <form
+          ref={formRef}
+          className="configArea"
+          onSubmit={onSubmit}
+          onChange={(e) => {
+            const eventTarget = /** @type {HTMLInputElement} */ (e.target);
+            if (eventTarget.name === InputNames.commandType) {
+              /** @type {HTMLInputElement | null | undefined} */
+              const commandInput = formRef.current?.querySelector(
+                `[name="${InputNames.command}"]`,
+              );
+              if (commandInput) {
+                commandInput.value = '';
+                setInputPlacerholder(
+                  InputPlacerholders[
+                    /** @type {keyof typeof InputPlacerholders} */ (
+                      eventTarget.value
+                    )
+                  ],
+                );
+              }
+            }
+          }}
+        >
+          {activeButtonIndex !== null && (
+            <div>
               <h1>Config</h1>
-              <h3>Type of Command</h3>
-              <RadioButton
-                label="Type Text"
-                index={0}
-                setActiveItem={setActiveCommandType}
-                active={activeCommandType === 0}
-              />
-              <RadioButton
-                label="Press Keycombination"
-                index={1}
-                setActiveItem={setActiveCommandType}
-                active={activeCommandType === 1}
-              />
-              <RadioButton
-                label="Open file"
-                index={2}
-                setActiveItem={setActiveCommandType}
-                active={activeCommandType === 2}
-              />
-              <RadioButton
-                label="Command"
-                index={3}
-                setActiveItem={setActiveCommandType}
-                active={activeCommandType === 3}
-              />
-              <br />
-              <h3>Value</h3>
-              {activeCommandType === 0 && (
-                <input
-                  placeholder="Hello World"
-                  className="commandInput"
-                  onChange={(e) => {
-                    setCommand(e.target.value);
-                  }}
-                  value={command}
+              <div>
+                <h3>Type of Command</h3>
+                <RadioButton
+                  name={InputNames.commandType}
+                  value="text"
+                  id="text"
+                  label="Type Text"
+                  defaultChecked
                 />
-              )}
-              {activeCommandType === 1 && (
-                <input
-                  placeholder="control+alt"
-                  className="commandInput"
-                  onChange={(e) => {
-                    setCommand(e.target.value);
-                  }}
-                  value={command}
+                <RadioButton
+                  name={InputNames.commandType}
+                  value="press"
+                  id="press"
+                  label="Press Keycombination"
                 />
-              )}
-              {activeCommandType === 2 && (
-                <input
-                  placeholder="path/to/file"
-                  className="commandInput"
-                  onChange={(e) => {
-                    setCommand(e.target.value);
-                  }}
-                  value={command}
+                <RadioButton
+                  name={InputNames.commandType}
+                  value="open"
+                  id="open"
+                  label="Open file"
                 />
-              )}
-              {activeCommandType === 3 && (
-                <input
-                  placeholder="shell command"
-                  className="commandInput"
-                  onChange={(e) => {
-                    setCommand(e.target.value);
-                  }}
-                  value={command}
+                <RadioButton
+                  name={InputNames.commandType}
+                  value="exec"
+                  id="exec"
+                  label="Command"
                 />
-              )}
-              <h3>Icon</h3>
-              <FileUpload
-                accept="image/png, image/jpeg"
-                fileInputRef={fileInputRef}
-              />
-              <button
-                // TODO: maybe use a form and turn this into type="apply"?
-                type="button"
-                onClick={() => applyChanges()}
-                className="applyButton"
-              >
-                Apply
-              </button>
-            </>
+                <h3>Value</h3>
+                <input
+                  id="commandInput"
+                  name={InputNames.command}
+                  placeholder={inputPlaceholder}
+                  type="text"
+                  defaultValue=""
+                  className="commandInput"
+                />
+                <h3>Icon</h3>
+                <FileUpload
+                  accept="image/png, image/jpeg"
+                  name={InputNames.file}
+                  id="file"
+                />
+                <button type="submit" className="applyButton">
+                  Apply
+                </button>
+              </div>
+            </div>
           )}
-        </div>
-        {webIP !== '' && (
+        </form>
+        {!!webIP && (
           <p className="webUIAdress">{`Deck: http://${webIP}:3000`}</p>
         )}
       </div>

@@ -77,28 +77,31 @@ app.on('ready', async () => {
   initServer();
 });
 
-ipcMain.on('button:update', (event, payload) => {
-  // @ts-ignore TODO
-  if (event.activeIndex === null) {
-    return;
-  }
-  let iconBuffer;
-  if (payload.iconPath) {
-    iconBuffer = fs.readFileSync(payload.iconPath);
-  }
-  db.prepare(
-    'REPLACE INTO buttons (id, commandType, command, image) VALUES(?,?,?,?)',
-  )
-    .bind([
-      payload.activeIndex,
-      payload.activeCommandType,
-      payload.command,
-      iconBuffer || null,
-    ])
-    .run();
-  // share info that button updated over websocket and ipc
-  if (activeSocket.socket) {
-    activeSocket.socket.send('buttonIcons:update');
-  }
-  mainWindow.webContents.send('buttonIcons:update');
-});
+ipcMain.on(
+  'button:update',
+  /** @param {ButtonDescriptor} payload */
+  (_, payload) => {
+    if (payload.activeIndex === null) {
+      return;
+    }
+    let iconBuffer;
+    if (payload.iconPath) {
+      iconBuffer = fs.readFileSync(payload.iconPath);
+    }
+    db.prepare(
+      'REPLACE INTO buttons (id, commandType, command, image) VALUES(?,?,?,?)',
+    )
+      .bind([
+        payload.activeIndex,
+        payload.activeCommandType,
+        payload.command,
+        iconBuffer || null,
+      ])
+      .run();
+    // share info that button updated over websocket and ipc
+    if (activeSocket.socket) {
+      activeSocket.socket.send('buttonIcons:update');
+    }
+    mainWindow.webContents.send('buttonIcons:update');
+  },
+);

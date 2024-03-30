@@ -32,6 +32,7 @@ export function WebView() {
     /** @type {string[]} */
     const paths = [];
     for (let i = 0; i < 18; i++) {
+      // TODO: duplicate logic of code in electronview
       paths.push(`./image/${i}?${new Date().getTime()}`);
     }
     setImageSources(paths);

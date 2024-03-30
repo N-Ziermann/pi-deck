@@ -1,6 +1,7 @@
 const { contextBridge, ipcRenderer } = require('electron');
 
 // TODO: make communication between the ipcRenderer and electron typesafe
+// TODO: consider unsub functions
 contextBridge.exposeInMainWorld('electron', {
   /** @type {typeof window.electron.isElectronProcess} */
   isElectronProcess: true,

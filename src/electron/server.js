@@ -32,10 +32,15 @@ function initServer() {
       .bind([req.params.imageId])
       .all();
 
-    if (rows.length === 0) {
+    // TODO: zod
+    if (
+      !rows[0] ||
+      typeof rows[0] !== 'object' ||
+      !('image' in rows[0]) ||
+      !(rows[0].image instanceof Blob)
+    ) {
       res.sendStatus(204);
     } else {
-      // @ts-ignore TODO
       const buffer = rows[0].image;
       res.contentType('image/png');
       res.send(buffer);

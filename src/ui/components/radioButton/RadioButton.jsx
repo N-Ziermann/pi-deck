@@ -1,25 +1,23 @@
-import './RadioButton.css';
-import classNames from 'classnames';
-
 /**
  * @param {{
- *   setActiveItem: (index: number) => void;
- *   index: number;
+ *   name: string;
+ *   id: string;
+ *   value: string;
  *   label: string;
- *   active: boolean;
+ *   defaultChecked?: boolean;
  * }} props
  */
-// TODO: try to use the actual html radio input
 export function RadioButton(props) {
   return (
-    <div
-      onClick={() => {
-        props.setActiveItem(props.index);
-      }}
-      className="radioButtonContainer"
-    >
-      <div className={classNames('radioButton', { checked: props.active })} />
-      <label>{props.label}</label>
+    <div>
+      <input
+        type="radio"
+        name={props.name}
+        id={props.id}
+        value={props.value}
+        defaultChecked={props.defaultChecked}
+      />
+      <label htmlFor={props.id}>{props.label}</label>
     </div>
   );
 }

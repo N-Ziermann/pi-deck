@@ -16,6 +16,7 @@
     "jsx-a11y/control-has-associated-label": "off",
     "jsx-one-expression-per-line": "off",
     "react/jsx-one-expression-per-line": "off",
+    "operator-linebreak": "off",
   },
   "parserOptions": {
     "ecmaVersion": 2020,
