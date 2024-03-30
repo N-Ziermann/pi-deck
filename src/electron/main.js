@@ -14,6 +14,10 @@ let mainWindow;
 /** @type {Tray} */
 let tray;
 
+if (!isDev) {
+  Menu.setApplicationMenu(null);
+}
+
 const contextMenu = Menu.buildFromTemplate([
   {
     label: 'Show',
