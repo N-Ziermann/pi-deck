@@ -3,6 +3,7 @@ import { ButtonArea } from '../../components/buttonArea/ButtonArea';
 import { RadioButton } from '../../components/radioButton/RadioButton';
 import './ElectronView.css';
 import { FileUpload } from '../../components/fileUpload/FileUpload';
+import { getButtonIconPaths } from '../../util';
 
 const InputNames = {
   file: 'file',
@@ -57,12 +58,9 @@ export function ElectronView() {
     resetForm();
   }, [activeButtonIndex, resetForm]);
 
-  const updateButtonSources = () =>
-    setImageSources(
-      Array.from({ length: 18 }).map(
-        (_, i) => `http://localhost:3000/image/${i}?${new Date().getTime()}`,
-      ),
-    );
+  const updateButtonSources = () => {
+    setImageSources(getButtonIconPaths('http://localhost:3000'));
+  };
 
   const onSubmit = useCallback(
     /** @param {React.FormEvent<HTMLFormElement>} e */

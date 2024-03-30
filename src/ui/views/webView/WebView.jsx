@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 
 import { ButtonArea } from '../../components/buttonArea/ButtonArea';
+import { getButtonIconPaths } from '../../util';
 
 export function WebView() {
   const [imageSources, setImageSources] = useState(
@@ -28,13 +29,7 @@ export function WebView() {
   };
 
   const updateButtonSources = () => {
-    /** @type {string[]} */
-    const paths = [];
-    for (let i = 0; i < 18; i++) {
-      // TODO: duplicate logic of code in electronview
-      paths.push(`./image/${i}?${new Date().getTime()}`);
-    }
-    setImageSources(paths);
+    setImageSources(getButtonIconPaths('./'));
   };
 
   return <ButtonArea onSelect={onSelect} icons={imageSources} />;
