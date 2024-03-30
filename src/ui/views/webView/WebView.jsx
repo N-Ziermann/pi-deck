@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
 
 import { ButtonArea } from '../../components/buttonArea/ButtonArea';
-import './WebView.css';
 
 export function WebView() {
   const [imageSources, setImageSources] = useState(

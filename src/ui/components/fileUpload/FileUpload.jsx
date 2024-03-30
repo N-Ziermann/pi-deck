@@ -20,7 +20,7 @@ export function FileUpload(props) {
       <input
         type="file"
         accept={props.accept}
-        className="inputElement"
+        className="input-element"
         onChange={(e) => setActiveText(e?.target?.files?.[0]?.name ?? null)}
         name={props.name}
         id={props.id}
@@ -28,7 +28,7 @@ export function FileUpload(props) {
       />
       <button
         type="button"
-        className="iconTextWrapper"
+        className="icon-text-wrapper"
         onClick={() => fileInputRef?.current?.click?.()}
       >
         <Upload size={20} /> <p>{activeText || 'Upload an Icon'}</p>

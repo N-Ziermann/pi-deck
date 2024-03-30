@@ -93,7 +93,7 @@ export function ElectronView() {
       <div>
         <form
           ref={formRef}
-          className="configArea"
+          className="config-area"
           onSubmit={onSubmit}
           onChange={(e) => {
             const eventTarget = /** @type {HTMLInputElement} */ (e.target);
@@ -152,7 +152,7 @@ export function ElectronView() {
                   placeholder={inputPlaceholder}
                   type="text"
                   defaultValue=""
-                  className="commandInput"
+                  className="command-input"
                 />
                 <h3>Icon</h3>
                 <FileUpload
@@ -160,7 +160,7 @@ export function ElectronView() {
                   name={InputNames.file}
                   id="file"
                 />
-                <button type="submit" className="applyButton">
+                <button type="submit" className="apply-button">
                   Apply
                 </button>
               </div>
@@ -168,7 +168,7 @@ export function ElectronView() {
           )}
         </form>
         {!!webIP && (
-          <p className="webUIAdress">{`Deck: http://${webIP}:3000`}</p>
+          <p className="web-ui-address">{`Deck: http://${webIP}:3000`}</p>
         )}
       </div>
     </>

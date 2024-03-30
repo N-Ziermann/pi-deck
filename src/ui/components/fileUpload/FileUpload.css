@@ -1,23 +1,23 @@
-.inputElement {
+.input-element {
   display: none;
 }
 
-.iconTextWrapper {
+.icon-text-wrapper {
   all: unset;
   display: flex;
   align-items: center;
   cursor: pointer;
 }
 
-.iconTextWrapper:focus {
+.icon-text-wrapper:focus {
   color: #aaa;
 }
 
-.iconTextWrapper p {
-  margin: 0 0 0 0.5rem;
+.icon-text-wrapper p {
   width: 80%;
+  margin: 0 0 0 0.5rem;
 }
 
-.iconTextWrapper svg {
+.icon-text-wrapper svg {
   min-width: 20px;
 }

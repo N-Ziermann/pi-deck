@@ -19,6 +19,7 @@
     "dist:win:noRebuild": "electron-builder --win",
     "lint": "eslint ./src --ext .js,.jsx,.cjs",
     "lint:types": "tsc",
+    "lint:styles": "stylelint src/**/*.css",
     "rebuild": "electron-rebuild -f -w better-sqlite3",
     "postinstall": "electron-builder install-app-deps"
   },
@@ -51,6 +52,9 @@
     "eslint": "^8.57.0",
     "eslint-config-airbnb": "^19.0.4",
     "prettier": "^3.2.5",
+    "stylelint": "^16.3.1",
+    "stylelint-config-idiomatic-order": "^10.0.0",
+    "stylelint-config-standard": "^36.0.0",
     "typescript": "^5.4.3",
     "vite": "^5.2.7"
   },

@@ -23,7 +23,7 @@ export function ButtonArea(props) {
     ));
 
   return (
-    <div className="buttonArea">
+    <div className="button-area">
       <div className="buttons">{renderButtons()}</div>
     </div>
   );
