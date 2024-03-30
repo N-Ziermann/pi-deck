@@ -29,7 +29,7 @@ export function WebView() {
   };
 
   const updateButtonSources = () => {
-    setImageSources(getButtonIconPaths('./'));
+    setImageSources(getButtonIconPaths('.'));
   };
 
   return <ButtonArea onSelect={onSelect} icons={imageSources} />;

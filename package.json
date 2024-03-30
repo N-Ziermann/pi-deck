@@ -79,7 +79,7 @@
     }
   },
   "files": [
-    "*.js",
+    "src/electron/*.js",
     "ui-dist/"
   ]
 }
