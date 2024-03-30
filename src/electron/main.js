@@ -1,11 +1,12 @@
 require('node:buffer');
-const { app, BrowserWindow, ipcMain, Tray, Menu } = require('electron');
+const { app, BrowserWindow, Tray, Menu } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const ip = require('ip');
 const { db } = require('./db');
 const { activeSocket, initServer } = require('./server');
 const { isDev } = require('./env');
+const { ipcMainSendBuilder, ipcMainOnBuilder } = require('./typesafeIpc');
 
 let appStopped = false;
 /** @type {BrowserWindow} */
@@ -58,7 +59,7 @@ app.on('ready', async () => {
       path.join(app.getAppPath(), '/ui-dist/index.html'),
     );
   }
-  mainWindow.webContents.send('ipAddress', ip.address());
+  ipcMainSendBuilder('ipAddress', mainWindow.webContents)(ip.address());
 
   if (!isDev) {
     mainWindow.removeMenu();
@@ -79,31 +80,27 @@ app.on('ready', async () => {
   initServer();
 });
 
-ipcMain.on(
-  'button:update',
-  /** @param {ButtonDescriptor} payload */
-  (_, payload) => {
-    if (payload.activeIndex === null) {
-      return;
-    }
-    let iconBuffer;
-    if (payload.iconPath) {
-      iconBuffer = fs.readFileSync(payload.iconPath);
-    }
-    db.prepare(
-      'REPLACE INTO buttons (id, commandType, command, image) VALUES(?,?,?,?)',
-    )
-      .bind([
-        payload.activeIndex,
-        payload.activeCommandType,
-        payload.command,
-        iconBuffer || null,
-      ])
-      .run();
-    // share info that button updated over websocket and ipc
-    if (activeSocket.socket) {
-      activeSocket.socket.send('buttonIcons:update');
-    }
-    mainWindow.webContents.send('buttonIcons:update');
-  },
-);
+ipcMainOnBuilder('button:update')((payload) => {
+  if (payload.activeIndex === null) {
+    return;
+  }
+  let iconBuffer;
+  if (payload.iconPath) {
+    iconBuffer = fs.readFileSync(payload.iconPath);
+  }
+  db.prepare(
+    'REPLACE INTO buttons (id, commandType, command, image) VALUES(?,?,?,?)',
+  )
+    .bind([
+      payload.activeIndex,
+      payload.activeCommandType,
+      payload.command,
+      iconBuffer || null,
+    ])
+    .run();
+  // share info that button updated over websocket and ipc
+  if (activeSocket.socket) {
+    activeSocket.socket.send('buttonIcons:update');
+  }
+  ipcMainSendBuilder('buttonIcons:update', mainWindow.webContents)(null);
+});

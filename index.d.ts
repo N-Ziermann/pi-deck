@@ -1,15 +1,10 @@
-type ButtonDescriptor = {
-  activeIndex: number;
-  activeCommandType: string;
-  command: string | null;
-  iconPath: string | null;
-};
+/// <reference path="./types/messaging.d.ts" />
 
 interface Window {
   electron: {
     isElectronProcess: boolean;
-    onUpdateIcons: (callback: () => void) => void;
-    onRecieveIP: (callback: (address: string) => void) => void;
-    updateButton: (values: ButtonDescriptor) => void;
+    onUpdateIcons: IpcOnFunction<'buttonIcons:update'>;
+    onRecieveIP: IpcOnFunction<'ipAddress'>;
+    updateButton: IpcSendFunction<'button:update'>;
   };
 }
