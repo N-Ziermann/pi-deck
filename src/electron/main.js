@@ -69,7 +69,7 @@ app.on('ready', async () => {
     mainWindow.removeMenu();
   }
 
-  tray = new Tray(path.join(app.getAppPath(), './icons/trayIcon@2x.png'));
+  tray = new Tray(path.join(app.getAppPath(), './icons/trayIconTemplate.png'));
   tray.setContextMenu(contextMenu);
   tray.setToolTip('PiDeck');
 
