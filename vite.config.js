@@ -13,6 +13,12 @@ export default defineConfig({
     outDir: '../ui-dist/',
   },
   server: {
+    // custom hmr & strict prot for electron-dev-proxy to work
     port: 5123,
+    strictPort: true,
+    hmr: {
+      port: 5423,
+      clientPort: 5423,
+    },
   },
 });
