@@ -1,3 +1,4 @@
+const open = require('open');
 const { z } = require('zod');
 const { exec } = require('child_process');
 const { app } = require('electron');
@@ -51,7 +52,6 @@ function onButtonEvent(buttonId) {
       callPythonScript(action.command ?? '', action.commandType);
       break;
     case 'open':
-      // eslint-disable-next-line no-restricted-globals
       open(action.command ?? '');
       console.info(`Opening: ${action.command}`);
       break;
