@@ -16,6 +16,10 @@ When you open the pideck desktop app you will see an icon appear in your Tray/Ta
 
 Clicking it will allow you to open the configuration interface in which you can add macros to each of the buttons the pideck provides.
 
+## Known Issues
+
+- Keyboard shortcuts on MacOS will only work, if the programm is ran from the commandline, because of issues with OSX's accessibility API
+
 ## Using the pideck
 
 When you're done configuring your pideck you can use your phone to head to the url displayed on the bottom right of the configuration panel.
