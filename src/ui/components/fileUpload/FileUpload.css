@@ -1,0 +1,23 @@
+.input-element {
+  display: none;
+}
+
+.icon-text-wrapper {
+  all: unset;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.icon-text-wrapper:focus {
+  color: #aaa;
+}
+
+.icon-text-wrapper p {
+  width: 80%;
+  margin: 0 0 0 0.5rem;
+}
+
+.icon-text-wrapper svg {
+  min-width: 20px;
+}

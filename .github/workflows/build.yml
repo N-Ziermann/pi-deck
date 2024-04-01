@@ -3,7 +3,26 @@ name: Build/release
 on: push
 
 jobs:
+  lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out Git repository
+        uses: actions/checkout@v4
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 18
+      - name: Install
+        run: 'npm ci'
+      - name: Lint
+        run: 'npm run lint'
+      - name: Lint Types
+        run: 'npm run lint:types'
+      - name: Lint Styles
+        run: 'npm run lint:styles'
+
   release:
+    needs: lint
     runs-on: ${{ matrix.os }}
 
     strategy:
@@ -12,13 +31,11 @@ jobs:
 
     steps:
       - name: Check out Git repository
-        uses: actions/checkout@v1
-
-      - name: Install Node.js, NPM and Yarn
-        uses: actions/setup-node@v1
+        uses: actions/checkout@v4
+      - name: Setup node
+        uses: actions/setup-node@v4
         with:
-          node-version: 14
-
+          node-version: 18
       - name: Build/release Electron app
         uses: samuelmeuli/action-electron-builder@v1
         with:

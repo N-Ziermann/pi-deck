@@ -1,0 +1,37 @@
+.button-area {
+  display: flex;
+  flex: 2;
+  align-items: center;
+  justify-content: center;
+  padding: 14px;
+  background-color: var(--color-secondary);
+}
+
+.buttons {
+  display: grid;
+  max-width: 90%;
+  grid-auto-rows: 1fr;
+  grid-gap: 10px;
+  grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
+}
+
+.buttons button {
+  display: flex;
+  min-width: 50px;
+  max-height: 30vh;
+  align-items: center;
+  justify-content: center;
+  border-radius: 14px;
+  aspect-ratio: 1;
+  background-color: var(--color-primary);
+}
+
+.active {
+  background-color: var(--color-ternary) !important;
+}
+
+.buttons button img {
+  width: 100%;
+  max-width: 100%;
+  max-height: 100%;
+}

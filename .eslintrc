@@ -1,0 +1,28 @@
+{
+  "extends": ["airbnb", "airbnb/hooks", "plugin:react/jsx-runtime"],
+  "rules": {
+    "import/no-extraneous-dependencies": "off",
+    "no-plusplus": "off",
+    "object-curly-newline": "off",
+    "function-paren-newline": "off",
+    "indent": "off",
+    "no-use-before-define": "off",
+    "no-console": "off",
+    "prefer-default-export": "off",
+    "import/prefer-default-export": "off",
+    "implicit-arrow-linebreak": "off",
+    "react/destructuring-assignment": "off",
+    "react/prop-types": "off",
+    "jsx-a11y/control-has-associated-label": "off",
+    "jsx-one-expression-per-line": "off",
+    "react/jsx-one-expression-per-line": "off",
+    "operator-linebreak": "off",
+  },
+  "parserOptions": {
+    "ecmaVersion": 2020,
+  },
+  "env": {
+    "browser": true,
+    "node": true,
+  },
+}
