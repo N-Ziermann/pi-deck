@@ -10,12 +10,12 @@
     "react:dev": "vite",
     "dev": "NODE_ENV=development electron .",
     "react:build": "vite build",
-    "dist:linux": "npm run react:build; electron-builder --linux",
-    "dist:linux:noRebuild": "electron-builder --linux",
+    "dist:linux": "npm run react:build; electron-builder --linux --x64",
+    "dist:linux:noRebuild": "electron-builder --linux --x64",
     "dist:mac": "npm run react:build; electron-builder --mac",
     "dist:mac:noRebuild": "electron-builder --mac",
-    "dist:win": "npm run react:build; electron-builder --win",
-    "dist:win:noRebuild": "electron-builder --win",
+    "dist:win": "npm run react:build; electron-builder --win --x64",
+    "dist:win:noRebuild": "electron-builder --win --x64",
     "lint": "eslint ./src --ext .js,.jsx,.cjs",
     "lint:types": "tsc",
     "lint:styles": "stylelint src/**/*.css",
@@ -60,14 +60,14 @@
     "vite": "^5.2.7"
   },
   "build": {
+    "appId": "com.n-ziermann.pi-deck",
+    "extends": null,
+    "icon": "./icons/desktopIcon.png",
     "extraResources": [
       "./src/extraResources/**",
       "./src/electron/preload.cjs"
     ],
-    "extends": null,
-    "appId": "com.n-ziermann.pi-deck",
     "linux": {
-      "icon": "./icons/desktopIcon.svg",
       "target": [
         "deb",
         "AppImage"
@@ -75,7 +75,6 @@
       "category": "Utility"
     },
     "mac": {
-      "icon": "./icons/desktopIcon.png",
       "target": "dmg"
     }
   },
