@@ -1,5 +1,6 @@
 require('node:buffer');
-const { app, BrowserWindow, Tray, Menu } = require('electron');
+const os = require('os');
+const { app, BrowserWindow, Tray, Menu, nativeImage } = require('electron');
 const path = require('path');
 const fs = require('fs');
 const ip = require('ip');
@@ -69,7 +70,14 @@ app.on('ready', async () => {
     mainWindow.removeMenu();
   }
 
-  tray = new Tray(path.join(app.getAppPath(), './icons/trayIconTemplate.png'));
+  tray = new Tray(
+    nativeImage.createFromPath(
+      path.join(
+        app.getAppPath(),
+        `./icons/${os.platform() === 'darwin' ? 'trayIconTemplate' : 'trayIcon'}.png`,
+      ),
+    ),
+  );
   tray.setContextMenu(contextMenu);
   tray.setToolTip('PiDeck');
 
